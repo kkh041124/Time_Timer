@@ -1,3 +1,14 @@
 * {
   background-color: #1e1e1e;
 }
+.Home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  transform: translateX(-20vh);
+}
+
+.Clock {
+  transform: translateY(-5vh);
+}

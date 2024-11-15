@@ -3,6 +3,7 @@ import styles from "./Clock.module.css";
 
 const Clock = () => {
   const [angle, setAngle] = useState(0);
+  const ClockRef = useRef(null); // Clock 전체를 참조하는 Ref
   const ClickerRef = useRef(null);
 
   useEffect(() => {
@@ -19,14 +20,17 @@ const Clock = () => {
           // Clicker의 중심을 기준으로 마우스 위치에 따른 각도 계산
           let newAngle =
             Math.atan2(mouseY - centerY, mouseX - centerX) * (180 / Math.PI);
-          newAngle = newAngle < 0 ? newAngle + 360 : newAngle; // 0~360 범위로 변환
+          newAngle = newAngle < 0 ? newAngle + 360 : newAngle;
 
           // 90도를 더해 시작점을 12시 방향으로 조정
           setAngle((newAngle + 90) % 360);
         };
 
-        window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
+        if (ClockRef.current) {
+          ClockRef.current.addEventListener("mousemove", handleMouseMove);
+          return () =>
+            ClockRef.current.removeEventListener("mousemove", handleMouseMove);
+        }
       }
     };
 
@@ -36,7 +40,7 @@ const Clock = () => {
   }, []);
 
   return (
-    <div className={styles.Clock}>
+    <div className={styles.Clock} ref={ClockRef}>
       <div className={styles.Clock_wrapper}>
         <div className={styles.tick_mark_wrapper}>
           {Array.from({ length: 60 }).map((_, i) => (
@@ -48,14 +52,25 @@ const Clock = () => {
                 height: i % 5 === 0 ? "28px" : "18px",
                 backgroundColor: i % 5 === 0 ? "white" : "gray",
               }}
-            />
+            >
+              {i % 5 === 0 ? (
+                <h2
+                  className={styles.tick_number}
+                  style={{
+                    transform: `rotate(${-i * 6}deg)`,
+                  }}
+                >
+                  {i === 0 ? "0" : 60 - i}
+                </h2>
+              ) : null}
+            </div>
           ))}
         </div>
         <div className={styles.timer_slider_wrapper}>
           <div
             className={styles.timer_slider}
             style={{
-              background: `conic-gradient(#333 ${angle}deg, #b33b3f ${angle}deg 360deg)`,
+              background: `conic-gradient(#1e1e1e ${angle}deg, #b33b3f ${angle}deg 360deg)`,
             }}
           >
             <div className={styles.Clicker} ref={ClickerRef}>
@@ -65,7 +80,6 @@ const Clock = () => {
               ></div>
             </div>
           </div>
-          <h2>angle:{angle}</h2>
         </div>
       </div>
     </div>

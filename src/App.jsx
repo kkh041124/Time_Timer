@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./page/Home/Home";
 function App() {
   return (
-    <div>
+    <div className={styles.App}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
