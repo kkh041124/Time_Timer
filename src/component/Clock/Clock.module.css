@@ -15,10 +15,10 @@
 
 .tick_number {
   position: absolute;
-  top: -50px;
+  top: -65px;
   left: 50%;
-  transform: translateX(-50%);
-  font-size: 12px;
+  transform: translate(-50%, 0) rotate(-90deg);
+  font-size: 20px;
   color: white;
 }
 .timer_slider_wrapper {
@@ -55,4 +55,9 @@
   left: 50%;
   transform-origin: 0 50%;
   transform: translate(0%, -50%);
+}
+
+.test {
+  position: absolute;
+  color: white;
 }

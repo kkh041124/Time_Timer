@@ -1,14 +1,24 @@
-* {
-  background-color: #1e1e1e;
-}
 .Home {
+  background-color: #1e1e1e;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   height: 100vh;
-  transform: translateX(-20vh);
+  position: relative;
 }
 
 .Clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transform: translateY(-5vh);
+}
+
+.Icon {
+  position: absolute;
+  bottom: 5%;
+  left: 2%;
+  display: flex;
+  flex-direction: column;
 }

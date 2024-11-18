@@ -1,0 +1,21 @@
+.Icon {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.Icon button {
+  border: none;
+  outline: none;
+}
+.Icon img {
+  width: 60px;
+  height: 60px;
+  gap: 26px;
+  stroke: white;
+  stroke-width: 150px;
+}
+.Icon img:hover {
+  background-color: rgb(61, 60, 60);
+}
