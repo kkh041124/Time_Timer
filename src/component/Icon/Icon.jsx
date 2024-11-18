@@ -6,13 +6,13 @@ import Pip from "./PIP/Pip";
 
 import styles from "./Icon.module.css";
 
-const Icon = () => {
+const Icon = ({ color, updateColorChange }) => {
   return (
     <div className={styles.Icon}>
       <Pip />
       <DashBoard />
       <Notification />
-      <ColorPicker />
+      <ColorPicker color={color} updateColorChange={updateColorChange} />
       <Github />
     </div>
   );

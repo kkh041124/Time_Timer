@@ -1,15 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./Clock.module.css";
 
-const Clock = ({ isCheck }) => {
+const Clock = ({ isCheck, color }) => {
   const [angle, setAngle] = useState(0);
   const [minute, setMinute] = useState(0);
+  const [click, setClick] = useState(true);
   const ClockRef = useRef(null); // Clock 전체를 참조하는 Ref
   const ClickerRef = useRef(null);
 
   let centerX = 0;
   let centerY = 0;
-
+  const handleClick = () => {
+    setClick(!click);
+    console.log(click);
+  };
   const handleMouseMove = (e) => {
     const mouseX = e.pageX;
     const mouseY = e.pageY;
@@ -37,9 +41,12 @@ const Clock = ({ isCheck }) => {
 
     updateCenter();
 
-    if (ClockRef.current && !isCheck) {
+    if (ClockRef.current && !isCheck && click) {
       ClockRef.current.addEventListener("mousemove", handleMouseMove);
       ClockRef.current.addEventListener("mousemove", transformTime);
+    } else if (ClockRef.current) {
+      ClockRef.current.removeEventListener("mousemove", handleMouseMove);
+      ClockRef.current.removeEventListener("mousemove", transformTime);
     }
 
     window.addEventListener("resize", updateCenter);
@@ -51,10 +58,10 @@ const Clock = ({ isCheck }) => {
       }
       window.removeEventListener("resize", updateCenter);
     };
-  }, [isCheck, angle]);
+  }, [isCheck, angle, click]); // isCheck와 angle 변경 시 효과 실행
 
   return (
-    <div className={styles.Clock} ref={ClockRef}>
+    <div className={styles.Clock} ref={ClockRef} onClick={handleClick}>
       <div className={styles.Clock_wrapper}>
         <div className={styles.tick_mark_wrapper}>
           {Array.from({ length: 60 }).map((_, i) => (
@@ -84,7 +91,7 @@ const Clock = ({ isCheck }) => {
           <div
             className={styles.timer_slider}
             style={{
-              background: `conic-gradient(#1e1e1e ${angle}deg, #b33b3f ${angle}deg 360deg)`,
+              background: `conic-gradient(#1e1e1e ${angle}deg, ${color} ${angle}deg 360deg)`,
             }}
           >
             <div className={styles.Clicker} ref={ClickerRef}>
@@ -96,9 +103,6 @@ const Clock = ({ isCheck }) => {
           </div>
         </div>
       </div>
-      {/* <h2 className={styles.test}>
-        anlge :{angle}, Time : {minute}
-      </h2> */}
     </div>
   );
 };

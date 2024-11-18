@@ -1,24 +1,55 @@
 .Home {
   background-color: #1e1e1e;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 15% 70% 15%;
+  grid-template-rows: 100%;
   height: 100vh;
-  position: relative;
+  gap: 20px;
 }
 
-.Clock {
+.Main {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  transform: translateY(-5vh);
+  gap: 80px;
+  transform: translateY(40px);
 }
 
 .Icon {
-  position: absolute;
-  bottom: 5%;
-  left: 2%;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 20px;
+  padding-left: 40px;
+  padding-bottom: 25px;
+}
+
+.focusBtn {
+  padding: 10px 20px;
+  font-size: 18px;
+  color: white;
+  background-color: #1e1e1e;
+  border: 2px solid #72bf78;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.focusBtn:hover {
+  background-color: #72bf78cb;
+}
+
+.focusBtnActive {
+  padding: 10px 20px;
+  font-size: 18px;
+  color: white;
+  background-color: #1e1e1e;
+  border: 2px solid #b33b3f;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.focusBtnActive:hover {
+  background-color: #b33b3fcb;
 }

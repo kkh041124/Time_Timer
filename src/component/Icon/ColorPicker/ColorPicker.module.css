@@ -1,4 +1,19 @@
-.ColorPicker button {
-  border: none;
-  background-color: transparent;
+.ColorPicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.PaletteIcon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.ColorInput {
+  position: absolute;
+  left: 50px;
+  opacity: 0;
+  pointer-events: none;
 }

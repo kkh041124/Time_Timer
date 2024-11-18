@@ -1,32 +1,34 @@
-import { useEffect, useRef, useState } from "react";
+import { useState, useRef } from "react";
 import pallet from "./asset/palette.svg";
 import styles from "./ColorPicker.module.css";
 
-const ColoerPicker = () => {
-  const [color, setColor] = useState(null);
-  const colorPallet = useRef(null);
+const ColorPicker = ({ color, updateColorChange }) => {
+  const colorInputRef = useRef(null);
 
-  const handle = () => {
-    const newInput = document.createElement("input");
-    newInput.setAttribute("type", "color");
-    newInput.style.display = "none";
-
-    newInput.addEventListener("input", (e) => {
-      setColor(e.target.value);
-    });
-
-    document.body.appendChild(newInput);
-    newInput.click();
-
-    newInput.addEventListener("change", () => {
-      document.body.removeChild(newInput);
-    });
+  const handleColorChange = (e) => {
+    updateColorChange(e.target.value);
   };
+  const handleClick = () => {
+    colorInputRef.current.click();
+  };
+
   return (
     <div className={styles.ColorPicker}>
-      <img src={pallet} ref={colorPallet} onClick={handle} alt="Palette" />
+      <img
+        src={pallet}
+        alt="Palette"
+        className={styles.PaletteIcon}
+        onClick={handleClick}
+      />
+      <input
+        type="color"
+        ref={colorInputRef}
+        className={styles.ColorInput}
+        value={color}
+        onChange={handleColorChange}
+      />
     </div>
   );
 };
 
-export default ColoerPicker;
+export default ColorPicker;

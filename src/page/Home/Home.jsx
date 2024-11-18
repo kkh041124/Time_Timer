@@ -5,20 +5,33 @@ import styles from "./Home.module.css";
 
 const Home = () => {
   const [isCheck, setIsCheck] = useState(false);
-  const handleChcek = () => {
+  const [color, setColor] = useState("#b33b3f");
+
+  const handleCheck = () => {
     setIsCheck(!isCheck);
-    console.log(isCheck);
   };
+
+  const updateColorChange = (newColor) => {
+    setColor(newColor);
+  };
+  console.log(isCheck);
   return (
     <div className={styles.Home}>
-      <div className={styles.Clock}>
-        <Clock isCheck={isCheck} />
-        <button onClick={handleChcek}>
+      <div className={styles.Icon}>
+        <Icon color={color} updateColorChange={updateColorChange} />
+      </div>
+      <div className={styles.Main}>
+        <div className={styles.Clock}>
+          <Clock isCheck={isCheck} color={color} />
+        </div>
+        <button
+          className={`${styles.focusBtn} ${
+            isCheck ? styles.focusBtnActive : ""
+          }`}
+          onClick={handleCheck}
+        >
           {isCheck ? "집중 중" : "집중 시작하기"}
         </button>
-      </div>
-      <div className={styles.Icon}>
-        <Icon />
       </div>
     </div>
   );
