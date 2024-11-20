@@ -5,11 +5,15 @@ const Clock = ({ isCheck, color }) => {
   const [angle, setAngle] = useState(0);
   const [minute, setMinute] = useState(0);
   const [click, setClick] = useState(true);
+  const [rotateClick, setRotateClick] = useState(false);
   const ClockRef = useRef(null); // Clock 전체를 참조하는 Ref
   const ClickerRef = useRef(null);
 
+  // Mouse Event 관리 변수
   let centerX = 0;
   let centerY = 0;
+  // Timer 관련 변수
+  const now = new Date();
   const handleClick = () => {
     setClick(!click);
     console.log(click);
@@ -24,7 +28,6 @@ const Clock = ({ isCheck, color }) => {
 
     setAngle((newAngle + 90) % 360);
   };
-
   const transformTime = () => {
     const newTime = 60 - Math.floor(angle / 6);
     setMinute(newTime);
@@ -59,7 +62,11 @@ const Clock = ({ isCheck, color }) => {
       window.removeEventListener("resize", updateCenter);
     };
   }, [isCheck, angle, click]); // isCheck와 angle 변경 시 효과 실행
-
+  const handleTick = () => {
+    const angle = angle - 1;
+    return angle;
+  };
+  setInterval(handleTick, 1000);
   return (
     <div className={styles.Clock} ref={ClockRef} onClick={handleClick}>
       <div className={styles.Clock_wrapper}>
