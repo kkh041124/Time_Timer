@@ -2,22 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import styles from "./Clock.module.css";
 
 const Clock = ({ isCheck, color }) => {
-  const [angle, setAngle] = useState(0);
-  const [minute, setMinute] = useState(0);
-  const [click, setClick] = useState(true);
-  const [rotateClick, setRotateClick] = useState(false);
-  const ClockRef = useRef(null); // Clock 전체를 참조하는 Ref
+  const [angle, setAngle] = useState(0); // 현재 각도 상태
+  const [minutes, setMinutes] = useState(0); // 분 상태
+  const [click, setClick] = useState(true); // 클릭 상태
+  const ClockRef = useRef(null);
   const ClickerRef = useRef(null);
 
-  // Mouse Event 관리 변수
   let centerX = 0;
   let centerY = 0;
-  // Timer 관련 변수
-  const now = new Date();
-  const handleClick = () => {
-    setClick(!click);
-    console.log(click);
-  };
+
   const handleMouseMove = (e) => {
     const mouseX = e.pageX;
     const mouseY = e.pageY;
@@ -28,9 +21,14 @@ const Clock = ({ isCheck, color }) => {
 
     setAngle((newAngle + 90) % 360);
   };
-  const transformTime = () => {
-    const newTime = 60 - Math.floor(angle / 6);
-    setMinute(newTime);
+
+  const updateTime = () => {
+    const calculatedMinutes = Math.floor((angle / 6) % 60); // 각도를 6도당 1분으로 변환
+    setMinutes(calculatedMinutes);
+  };
+
+  const toggleClick = () => {
+    setClick((prev) => !prev); // 클릭 상태 토글
   };
 
   useEffect(() => {
@@ -46,10 +44,10 @@ const Clock = ({ isCheck, color }) => {
 
     if (ClockRef.current && !isCheck && click) {
       ClockRef.current.addEventListener("mousemove", handleMouseMove);
-      ClockRef.current.addEventListener("mousemove", transformTime);
+      ClockRef.current.addEventListener("mousemove", updateTime);
     } else if (ClockRef.current) {
       ClockRef.current.removeEventListener("mousemove", handleMouseMove);
-      ClockRef.current.removeEventListener("mousemove", transformTime);
+      ClockRef.current.removeEventListener("mousemove", updateTime);
     }
 
     window.addEventListener("resize", updateCenter);
@@ -57,18 +55,30 @@ const Clock = ({ isCheck, color }) => {
     return () => {
       if (ClockRef.current) {
         ClockRef.current.removeEventListener("mousemove", handleMouseMove);
-        ClockRef.current.removeEventListener("mousemove", transformTime);
+        ClockRef.current.removeEventListener("mousemove", updateTime);
       }
       window.removeEventListener("resize", updateCenter);
     };
-  }, [isCheck, angle, click]); // isCheck와 angle 변경 시 효과 실행
-  const handleTick = () => {
-    const angle = angle - 1;
-    return angle;
-  };
-  setInterval(handleTick, 1000);
+  }, [isCheck, click]);
+
+  useEffect(() => {
+    if (!isCheck) return;
+
+    const handleTick = () => {
+      setAngle((prevAngle) => (prevAngle + 0.1) % 360);
+    };
+
+    const intervalId = setInterval(handleTick, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [isCheck, click]);
+
   return (
-    <div className={styles.Clock} ref={ClockRef} onClick={handleClick}>
+    <div
+      className={styles.Clock}
+      ref={ClockRef}
+      onClick={toggleClick} // 클릭 시 상태 토글
+    >
       <div className={styles.Clock_wrapper}>
         <div className={styles.tick_mark_wrapper}>
           {Array.from({ length: 60 }).map((_, i) => (
@@ -109,6 +119,7 @@ const Clock = ({ isCheck, color }) => {
             </div>
           </div>
         </div>
+        <div className={styles.minutes_display}>Minutes: {minutes}</div>
       </div>
     </div>
   );

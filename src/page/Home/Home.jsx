@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Clock from "../../component/Clock/Clock";
 import Icon from "../../component/Icon/Icon";
 import styles from "./Home.module.css";
@@ -7,6 +7,8 @@ const Home = () => {
   const [isCheck, setIsCheck] = useState(false);
   const [color, setColor] = useState("#b33b3f");
 
+  const clockRef = useRef(null);
+
   const handleCheck = () => {
     setIsCheck(!isCheck);
   };
@@ -14,14 +16,18 @@ const Home = () => {
   const updateColorChange = (newColor) => {
     setColor(newColor);
   };
-  console.log(isCheck);
+
   return (
     <div className={styles.Home}>
       <div className={styles.Icon}>
-        <Icon color={color} updateColorChange={updateColorChange} />
+        <Icon
+          color={color}
+          updateColorChange={updateColorChange}
+          clockRef={clockRef}
+        />
       </div>
       <div className={styles.Main}>
-        <div className={styles.Clock}>
+        <div className={styles.Clock} ref={clockRef}>
           <Clock isCheck={isCheck} color={color} />
         </div>
         <button
