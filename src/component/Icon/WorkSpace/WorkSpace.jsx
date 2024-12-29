@@ -1,5 +1,4 @@
-import { LayoutDashboard } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Grid } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -7,21 +6,13 @@ import {
   TooltipProvider,
 } from "@radix-ui/react-tooltip";
 
-const DashBoard = () => {
-  const navigate = useNavigate();
-  const movePage = () => {
-    navigate("./dashboard");
-  };
-
+const WorkSpace = () => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div
-            className="text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-md p-2"
-            onClick={movePage}
-          >
-            <LayoutDashboard className="h-6 w-6" />
+          <div className="text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-md p-2">
+            <Grid className="h-6 w-6" />
           </div>
         </TooltipTrigger>
         <TooltipContent
@@ -30,11 +21,11 @@ const DashBoard = () => {
           sideOffset={8}
           className="bg-white text-black rounded-md p-2 shadow-lg"
         >
-          <p>대시보드</p>
+          <p>워크스페이스</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
 };
 
-export default DashBoard;
+export default WorkSpace;

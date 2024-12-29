@@ -1,5 +1,5 @@
 .Home {
-  background-color: #1e1e1e;
+  background-color: #111827;
   display: grid;
   grid-template-columns: 15% 70% 15%;
   grid-template-rows: 100%;
@@ -30,7 +30,7 @@
   padding: 10px 20px;
   font-size: 18px;
   color: white;
-  background-color: #1e1e1e;
+  background-color: #111827;
   border: 2px solid #72bf78;
   border-radius: 8px;
   cursor: pointer;
@@ -44,7 +44,7 @@
   padding: 10px 20px;
   font-size: 18px;
   color: white;
-  background-color: #1e1e1e;
+  background-color: #111827;
   border: 2px solid #b33b3f;
   border-radius: 8px;
   cursor: pointer;

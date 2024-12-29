@@ -8,6 +8,9 @@ const Clock = ({ isCheck, color }) => {
   const ClockRef = useRef(null);
   const ClickerRef = useRef(null);
 
+  // 이 상태는 useRef를 사용해 컴포넌트 리렌더링 시 값을 유지
+  const prevColorRef = useRef(color);
+
   let centerX = 0;
   let centerY = 0;
 
@@ -73,6 +76,13 @@ const Clock = ({ isCheck, color }) => {
     return () => clearInterval(intervalId);
   }, [isCheck, click]);
 
+  // color 값이 변경될 때 상태를 초기화하지 않도록 설정
+  useEffect(() => {
+    if (prevColorRef.current !== color) {
+      prevColorRef.current = color;
+    }
+  }, [color]);
+
   return (
     <div
       className={styles.Clock}
@@ -81,34 +91,36 @@ const Clock = ({ isCheck, color }) => {
     >
       <div className={styles.Clock_wrapper}>
         <div className={styles.tick_mark_wrapper}>
-          {Array.from({ length: 60 }).map((_, i) => (
-            <div
-              key={i}
-              className={styles.tick_mark}
-              style={{
-                transform: `rotate(${i * 6}deg)`,
-                height: i % 5 === 0 ? "28px" : "18px",
-                backgroundColor: i % 5 === 0 ? "white" : "gray",
-              }}
-            >
-              {i % 5 === 0 ? (
-                <h2
-                  className={styles.tick_number}
-                  style={{
-                    transform: `rotate(${i * -6}deg)`,
-                  }}
-                >
-                  {i === 0 ? "0" : 60 - i}
-                </h2>
-              ) : null}
-            </div>
-          ))}
+          <div className={styles.Clock}>
+            {Array.from({ length: 60 }).map((_, i) => (
+              <div
+                key={i}
+                className={styles.tick_mark}
+                style={{
+                  transform: `rotate(${i * 6}deg)`,
+                  height: i % 5 === 0 ? "28px" : "18px",
+                  backgroundColor: i % 5 === 0 ? "white" : "gray",
+                }}
+              >
+                {i % 5 === 0 && (
+                  <div
+                    className={styles.tick_number}
+                    style={{
+                      transform: `translate(-50%, -50%) rotate(${-i * 6}deg)`,
+                    }}
+                  >
+                    {i === 0 ? "60" : 60 - i}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
         <div className={styles.timer_slider_wrapper}>
           <div
             className={styles.timer_slider}
             style={{
-              background: `conic-gradient(#1e1e1e ${angle}deg, ${color} ${angle}deg 360deg)`,
+              background: `conic-gradient(#111827 ${angle}deg, ${color} ${angle}deg 360deg)`,
             }}
           >
             <div className={styles.Clicker} ref={ClickerRef}>
@@ -119,7 +131,6 @@ const Clock = ({ isCheck, color }) => {
             </div>
           </div>
         </div>
-        <div className={styles.minutes_display}>Minutes: {minutes}</div>
       </div>
     </div>
   );

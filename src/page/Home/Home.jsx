@@ -16,7 +16,6 @@ const Home = () => {
   const updateColorChange = (newColor) => {
     setColor(newColor);
   };
-
   return (
     <div className={styles.Home}>
       <div className={styles.Icon}>

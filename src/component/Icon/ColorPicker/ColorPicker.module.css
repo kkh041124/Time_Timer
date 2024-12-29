@@ -6,14 +6,47 @@
 }
 
 .PaletteIcon {
-  width: 40px;
-  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px; /* 아이콘 크기 */
+  height: 50px;
   cursor: pointer;
+  color: #ffffff; /* 아이콘 색상 */
+  background: none; /* 아이콘 배경색 */
+  border-radius: 12px; /* 모서리 둥글게 */
+  transition: transform 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.PaletteIcon:hover {
+  transform: scale(1.1); /* 호버 시 확대 */
+  background: #334155; /* 호버 시 배경색 변경 */
+  color: #94a3b8; /* 호버 시 아이콘 색상 변경 */
 }
 
 .ColorInput {
-  position: absolute;
-  left: 50px;
-  opacity: 0;
-  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  width: 0;
+  height: 0;
+  opacity: 0; /* 숨김 */
+}
+
+[data-radix-tooltip-content] {
+  background-color: #f8fafc; /* 툴팁 배경색 */
+  color: #1e293b; /* 툴팁 텍스트 색상 */
+  border-radius: 8px; /* 툴팁 모서리 둥글게 */
+  padding: 6px 12px; /* 툴팁 내부 여백 */
+  font-size: 14px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 툴팁 그림자 */
+}
+
+.TooltipText {
+  font-weight: bold;
+  text-align: center;
 }
