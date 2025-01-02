@@ -1,0 +1,86 @@
+.WorkSpace {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: #f3f4f6;
+}
+/* header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e8e8eb;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* content */
+.content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.folderPanelContainer {
+  width: 20%;
+  background-color: #f9fafb;
+  border-right: 2px solid #e8e8eb;
+  overflow-y: auto;
+}
+
+.taskContainer {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.taskFiltersContainer {
+  margin-bottom: 1rem;
+}
+
+.taskGridContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.taskStatsContainer {
+  margin-top: 1rem;
+}
+.addTaskModal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.addTaskModal h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.addTaskButton {
+  font-size: 1rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #18181b;
+  border: 1px solid #e8e8eb;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+}

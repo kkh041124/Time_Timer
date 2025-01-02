@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
-import Clock from "../../component/Clock/Clock";
-import Icon from "../../component/Icon/Icon";
+import Clock from "../../components/Clock/Clock";
+import Icon from "../../components/Icon/Icon";
 import styles from "./Home.module.css";
 
 const Home = () => {

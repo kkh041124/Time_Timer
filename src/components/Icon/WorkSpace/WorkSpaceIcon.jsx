@@ -5,13 +5,21 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@radix-ui/react-tooltip";
+import { useNavigate } from "react-router-dom";
 
-const WorkSpace = () => {
+const WorkSpaceIcon = () => {
+  const navigate = useNavigate();
+  const movePage = () => {
+    navigate("./workspace");
+  };
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-md p-2">
+          <div
+            className="text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-md p-2"
+            onClick={movePage}
+          >
             <Grid className="h-6 w-6" />
           </div>
         </TooltipTrigger>
@@ -28,4 +36,4 @@ const WorkSpace = () => {
   );
 };
 
-export default WorkSpace;
+export default WorkSpaceIcon;
