@@ -24,7 +24,9 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
   const toggleCalendar = () => {
     setIsCalendarOpen((prev) => !prev);
   };
-
+  const handleTagsChange = (e) => {
+    setTags(e.target.value.split(",").map((tag) => tag.trim()));
+  };
   const handleAddTask = () => {
     const newTask = {
       title,
@@ -37,6 +39,15 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
     };
     onAddTask(newTask);
     onClose();
+    setTitle("");
+    setStatus("todo");
+    setDueDate(null);
+    setPomodoro(0);
+    setDescription("");
+    setTags([]);
+    setPriority(0);
+    localStorage.setItem("task", JSON.stringify(newTask));
+    console.log(localStorage.getItem("task"));
   };
 
   if (!isOpen) return null;
@@ -127,10 +138,10 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
             <input
               type="text"
               id="tags"
-              value={tags.join("# ")}
-              onChange={(e) => setTags(e.target.value.split("#"))}
-              placeholder="#으로 구분"
+              value={tags.join(", ")}
+              onChange={handleTagsChange}
               className={styles.input}
+              placeholder="태그를 쉼표로 구분"
             />
           </div>
           <div className={styles.inputGroup}>

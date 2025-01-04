@@ -2,18 +2,27 @@ import { X } from "lucide-react";
 import { Plus } from "lucide-react";
 import styles from "./WorkSpace.module.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import FolderPanel from "../../components/workspace/folder-panel/FolderPanel";
 import TaskFilters from "../../components/workspace/task-filters/TaskFilters";
 import TaskGrid from "../../components/workspace/task-grid/TaskGrid";
 import TaskStats from "../../components/workspace/task-stats/TaskStats";
 import AddTaskModal from "../../components/workspace/AddTaskModal/AddTaskModal";
-import TaskCard from "../../components/workspace/task-card/TaskCard";
+
 const WorkSpace = () => {
   const navigate = useNavigate();
   const [isModalOpen, setModalOpen] = useState(false);
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    const storedTasks = localStorage.getItem("tasks");
+    return storedTasks ? JSON.parse(storedTasks) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  console.log(tasks);
 
   const handleAddTaskClick = () => {
     setModalOpen(true);
@@ -24,7 +33,9 @@ const WorkSpace = () => {
   };
 
   const handleAddTask = (task) => {
-    setTasks((prevTasks) => [...prevTasks, task]);
+    setTasks((prevTasks) =>
+      Array.isArray(prevTasks) ? [...prevTasks, task] : [task]
+    );
     setModalOpen(false);
   };
 
@@ -67,6 +78,7 @@ const WorkSpace = () => {
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           onAddTask={handleAddTask}
+          tasks={tasks}
         />
       )}
     </div>
