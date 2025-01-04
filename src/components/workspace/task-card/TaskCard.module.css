@@ -7,6 +7,8 @@
 }
 
 .taskCard {
+  width: 400px;
+  height: auto;
   padding: 16px;
   border-radius: 8px;
   background-color: #ffffff;
@@ -16,6 +18,8 @@
 
 .cardHeader {
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
   gap: 8px;
 }
@@ -27,40 +31,34 @@
 
 .cardContent {
   margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.status,
-.dueDate,
-.priority,
-.tags {
-  margin-top: 8px;
-}
 .priorityContainer {
   display: flex;
-  gap: 2px;
+  gap: 4px;
+  align-items: center;
 }
+
 .starIcon {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   fill: #eab308;
   stroke: #eab308;
 }
-.dueDate {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-.calendarIcon {
-  width: 20px;
-  height: 20px;
-}
-.duration {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
+
+.dueDate,
+.duration,
 .progress {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 8px;
+}
+
+.calendarIcon,
+.appleIcon {
+  width: 20px;
+  height: 20px;
 }

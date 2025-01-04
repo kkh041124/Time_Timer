@@ -3,7 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Star, Calendar, Apple } from "lucide-react";
 import styles from "./TaskCard.module.css";
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, className }) => {
   console.log(task); // Debugging: Log the task data
 
   if (!task) {
@@ -63,35 +63,44 @@ const TaskCard = ({ task }) => {
     }
   };
   return (
-    <Card className={`border-2 ${borderClass} ${styles.taskCard}`}>
-      <CardHeader className={styles.cardHeader}>
-        <Checkbox />
-        <CardTitle className={styles.cardTitle}>{task.title}</CardTitle>
-      </CardHeader>
-      <CardContent className={styles.cardContent}>
-        <p className={styles.priority}>{priorityClass(task.priority)}</p>
-        <p className={styles.dueDate}>
-          <Calendar className={styles.calendarIcon} />
-          <strong>마감일 :</strong>
+    <div className={`border-2 ${styles.taskCard} ${borderClass}`}>
+      <div className={styles.cardHeader}>
+        <input type="checkbox" />
+        <span className={styles.cardTitle}>{task.title}</span>
+      </div>
+      <div className={styles.cardContent}>
+        <div className={styles.priorityContainer}>
+          {Array.from({ length: task.priority }, (_, index) => (
+            <span key={index} className={styles.starIcon}>
+              ⭐
+            </span>
+          ))}
+        </div>
+        <div className={styles.dueDate}>
+          <span className={styles.calendarIcon}>📅</span>
+          <strong>마감일 :</strong>{" "}
           {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "N/A"}
-        </p>
-        <p className={styles.duration}>
-          <Apple className={styles.appleIcon} />
-          <strong>진행 시간 :</strong> {task.duration} hours
-        </p>
-        <p className={styles.progress}>
-          <Apple className={styles.appleIcon} />
-          <strong>진행률 :</strong> <Apple />
-          <Apple />
-          ⭕⭕
-        </p>
-        {/* {task.progress && (
-          <p className={styles.progress}>
-            <strong>Progress:</strong> {`${task.progress}%`}
-          </p>
-        )} */}
-      </CardContent>
-    </Card>
+        </div>
+        {task.duration && (
+          <div className={styles.duration}>
+            <span className={styles.appleIcon}>🍎</span>
+            <strong>진행시간 :</strong> {task.duration}
+          </div>
+        )}
+        {/* <div className={styles.progress}>
+          <span className={styles.appleIcon}>🍎</span>
+          <strong>진행률 :</strong>
+          {Array.from({ length: task.progress.total }, (_, index) =>
+            index < task.progress.completed ? "🍎" : "⭕"
+          ).join(" ")}{" "}
+          ({task.progress.completed}/{task.progress.total} 완료)
+        </div> */}
+        <div className={styles.progress}>
+          <span className={styles.appleIcon}>🍎</span>
+          <strong>진행률 :</strong> 🍎🍎⭕⭕ (2/4 완료)
+        </div>
+      </div>
+    </div>
   );
 };
 
