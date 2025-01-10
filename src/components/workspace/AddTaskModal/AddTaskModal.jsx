@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Calendar, Star, X } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -27,6 +27,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
   const handleTagsChange = (e) => {
     setTags(e.target.value.split(",").map((tag) => tag.trim()));
   };
+
   const handleAddTask = () => {
     const newTask = {
       title,
@@ -38,6 +39,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
       priority,
     };
     onAddTask(newTask);
+
     onClose();
     setTitle("");
     setStatus("todo");

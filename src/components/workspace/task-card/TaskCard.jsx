@@ -1,16 +1,32 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Star, Calendar, Apple } from "lucide-react";
+import { GripHorizontal } from "lucide-react";
 import styles from "./TaskCard.module.css";
+import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 
-const TaskCard = ({ task, className }) => {
-  console.log(task); // Debugging: Log the task data
+const TaskCard = ({ task, isOverlay = false, activeId }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDraggableRef,
+    transform,
+    transition,
+  } = useDraggable({
+    id: task?.id,
+    disabled: isOverlay,
+  });
 
-  if (!task) {
-    return null;
-  }
+  const { setNodeRef: setDroppableRef } = useDroppable({
+    id: task?.id,
+  });
 
-  // Determine the border class based on the task status
+  const combinedRef = (node) => {
+    setDraggableRef(node);
+    setDroppableRef(node);
+  };
+
+  if (!task) return null;
+
   const borderClass =
     task.status === "todo"
       ? "border-gray-300"
@@ -19,53 +35,31 @@ const TaskCard = ({ task, className }) => {
       : task.status === "done"
       ? "border-green-500"
       : "border-gray-300";
-  const priorityClass = (priority) => {
-    if (priority === 1) {
-      return (
-        <div className={styles.priorityContainer}>
-          <Star className={styles.starIcon} />
-        </div>
-      );
-    } else if (priority === 2) {
-      return (
-        <div className={styles.priorityContainer}>
-          <Star className={styles.starIcon} />
-          <Star className={styles.starIcon} />
-        </div>
-      );
-    } else if (priority === 3) {
-      return (
-        <div className={styles.priorityContainer}>
-          <Star className={styles.starIcon} />
-          <Star className={styles.starIcon} />
-          <Star className={styles.starIcon} />
-        </div>
-      );
-    } else if (priority === 4) {
-      return (
-        <div className={styles.priorityContainer}>
-          <Star className={styles.starIcon} />
-          <Star className={styles.starIcon} />
-          <Star className={styles.starIcon} />
-          <Star className={styles.starIcon} />
-        </div>
-      );
-    } else if (priority === 5) {
-      return (
-        <div className={styles.priorityContainer}>
-          <Star className={styles.starIcon} />
-          <Star className={styles.starIcon} />
-          <Star className={styles.starIcon} />
-          <Star className={styles.starIcon} />
-          <Star className={styles.starIcon} />
-        </div>
-      );
-    }
-  };
+
+  // 드래그 중인 원본 카드(오버레이 X) → 투명
+  const isDragging = activeId === task.id && !isOverlay;
+
+  // 오버레이로 렌더링 시 transform/transition 적용
+  const style = isOverlay
+    ? {
+        transform: transform ? CSS.Translate.toString(transform) : undefined,
+        transition: transition || undefined,
+      }
+    : {
+        opacity: isDragging ? 0 : 1,
+      };
+
+  console.log("TaskCard Render - id:", task.id);
+
   return (
-    <div className={`border-2 ${styles.taskCard} ${borderClass}`}>
+    <div
+      ref={combinedRef}
+      {...attributes}
+      className={`border-2 ${styles.taskCard} ${borderClass}`}
+      style={style}
+    >
       <div className={styles.cardHeader}>
-        <input type="checkbox" />
+        <Checkbox />
         <span className={styles.cardTitle}>{task.title}</span>
       </div>
       <div className={styles.cardContent}>
@@ -76,28 +70,27 @@ const TaskCard = ({ task, className }) => {
             </span>
           ))}
         </div>
-        <div className={styles.dueDate}>
-          <span className={styles.calendarIcon}>📅</span>
-          <strong>마감일 :</strong>{" "}
-          {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "N/A"}
-        </div>
+        {task.dueDate && (
+          <div className={styles.dueDate}>
+            <span className={styles.calendarIcon}>📅</span>
+            <strong>마감일 :</strong>{" "}
+            {new Date(task.dueDate).toLocaleDateString()}
+          </div>
+        )}
         {task.duration && (
           <div className={styles.duration}>
             <span className={styles.appleIcon}>🍎</span>
             <strong>진행시간 :</strong> {task.duration}
           </div>
         )}
-        {/* <div className={styles.progress}>
-          <span className={styles.appleIcon}>🍎</span>
-          <strong>진행률 :</strong>
-          {Array.from({ length: task.progress.total }, (_, index) =>
-            index < task.progress.completed ? "🍎" : "⭕"
-          ).join(" ")}{" "}
-          ({task.progress.completed}/{task.progress.total} 완료)
-        </div> */}
-        <div className={styles.progress}>
-          <span className={styles.appleIcon}>🍎</span>
-          <strong>진행률 :</strong> 🍎🍎⭕⭕ (2/4 완료)
+        <div className={styles.progressContainer}>
+          <div className={styles.progress}>
+            <span className={styles.appleIcon}>🍎</span>
+            <strong>진행률 :</strong> 🍎🍎⭕⭕ (2/4 완료)
+          </div>
+          <div className={styles.gripHorizontal} {...listeners}>
+            <GripHorizontal />
+          </div>
         </div>
       </div>
     </div>

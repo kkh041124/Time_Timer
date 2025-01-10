@@ -7,7 +7,7 @@
 }
 
 .taskCard {
-  width: 400px;
+  width: 420px;
   height: auto;
   padding: 16px;
   border-radius: 8px;
@@ -61,4 +61,14 @@
 .appleIcon {
   width: 20px;
   height: 20px;
+}
+.progressContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.draggable {
+  transition: transform 0.2s ease;
 }
