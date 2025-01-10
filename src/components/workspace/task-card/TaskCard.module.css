@@ -1,25 +1,18 @@
-.taskCardContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px;
-  border-radius: 8px;
-}
-
 .taskCard {
-  width: 420px;
+  /* width: 420px;  ← 고정 폭은 제거 */
   height: auto;
   padding: 16px;
   border-radius: 8px;
   background-color: #ffffff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: border-color 0.3s ease;
+  box-sizing: border-box;
+  border: 2px solid transparent; /* 상태에 따라 JS에서 조절 */
 }
 
 .cardHeader {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
   align-items: center;
   gap: 8px;
 }
@@ -42,13 +35,6 @@
   align-items: center;
 }
 
-.starIcon {
-  width: 16px;
-  height: 16px;
-  fill: #eab308;
-  stroke: #eab308;
-}
-
 .dueDate,
 .duration,
 .progress {
@@ -57,18 +43,10 @@
   gap: 8px;
 }
 
-.calendarIcon,
-.appleIcon {
-  width: 20px;
-  height: 20px;
-}
 .progressContainer {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-}
-.draggable {
-  transition: transform 0.2s ease;
 }
