@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { GripHorizontal } from "lucide-react";
+import { GripHorizontal, Trash2 } from "lucide-react";
 import styles from "./TaskCard.module.css";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
@@ -59,8 +59,13 @@ const TaskCard = ({ task, isOverlay = false, activeId }) => {
       style={style}
     >
       <div className={styles.cardHeader}>
-        <Checkbox />
-        <span className={styles.cardTitle}>{task.title}</span>
+        <div className={styles.checkboxContainer}>
+          <Checkbox />
+          <span className={styles.cardTitle}>{task.title}</span>
+        </div>
+        <div className={styles.trashIconContainer}>
+          <Trash2 className={styles.trashIcon} />
+        </div>
       </div>
       <div className={styles.cardContent}>
         <div className={styles.priorityContainer}>
