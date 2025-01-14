@@ -10,22 +10,17 @@ import TaskGrid from "../../components/workspace/task-grid/TaskGrid";
 import TaskStats from "../../components/workspace/task-stats/TaskStats";
 import AddTaskModal from "../../components/workspace/AddTaskModal/AddTaskModal";
 import TaskCard from "../../components/workspace/task-card/TaskCard";
+import DetailPanel from "../../components/workspace/detail-panel/DetailPanel";
 
 const WorkSpace = () => {
   const navigate = useNavigate();
 
-  // 로컬 스토리지에서 불러와서 state 세팅
-  const [tasks, setTasks] = useState([]);
-
-  // ID 발급용 ref
-  const idRef = useRef(1);
-
-  // 드래그 중인 카드의 ID
-  const [activeId, setActiveId] = useState(null);
-
-  // 작업 추가 모달 열림 상태
-  const [isModalOpen, setModalOpen] = useState(false);
-
+  const [tasks, setTasks] = useState([]); // 로컬 스토리지에서 불러와서 state 세팅
+  const idRef = useRef(1); // ID 발급용 ref
+  const [activeId, setActiveId] = useState(null); // 드래그 중인 카드의 ID
+  const [isModalOpen, setModalOpen] = useState(false); // 작업 추가 모달 열림 상태
+  const [isDetailOpen, setIsDetailOpen] = useState(false); // 상세 패널 열림 상태
+  const [selectedTaskId, setSelectedTaskId] = useState(null); // 선택된 태스크 ID
   useEffect(() => {
     const stored = localStorage.getItem("tasks");
     if (stored) {
@@ -95,6 +90,27 @@ const WorkSpace = () => {
     updated.splice(newIndex, 0, moved);
     setTasks(updated);
   };
+  const handleDeleteTask = (id) => {
+    const newTasks = tasks.filter((task) => task.id !== id);
+    setTasks(newTasks);
+    localStorage.setItem("tasks", JSON.stringify(newTasks));
+  };
+
+  // detail panel
+  const handleCardClick = (id) => {
+    if (selectedTaskId === id) {
+      setIsDetailOpen(false);
+      setSelectedTaskId(null);
+    } else {
+      setSelectedTaskId(id);
+      setIsDetailOpen(true);
+    }
+  };
+  const closeDetail = () => {
+    setIsDetailOpen(false);
+    setSelectedTaskId(null);
+  };
+  const selectedTask = tasks.find((t) => t.id === selectedTaskId) || null;
 
   return (
     <div className={styles.WorkSpace}>
@@ -136,7 +152,12 @@ const WorkSpace = () => {
           {/* Drag & Drop 컨텍스트 */}
           <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
             <div className={styles.taskGridContainer}>
-              <TaskGrid tasks={tasks} activeId={activeId} />
+              <TaskGrid
+                tasks={tasks}
+                activeId={activeId}
+                onDelete={handleDeleteTask}
+                onCardClick={handleCardClick} // 카드 클릭시 핸들러
+              />
             </div>
 
             <DragOverlay style={{ zIndex: 9999 }}>
@@ -148,6 +169,12 @@ const WorkSpace = () => {
               ) : null}
             </DragOverlay>
           </DndContext>
+        </div>
+
+        <div className={styles.detailPanelContainer}>
+          {isDetailOpen && selectedTask && (
+            <DetailPanel task={selectedTask} onClose={closeDetail} />
+          )}
         </div>
       </div>
 

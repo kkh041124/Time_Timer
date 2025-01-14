@@ -48,8 +48,6 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
     setDescription("");
     setTags([]);
     setPriority(0);
-    localStorage.setItem("task", JSON.stringify(newTask));
-    console.log(localStorage.getItem("task"));
   };
 
   if (!isOpen) return null;
@@ -117,6 +115,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
             <input
               type="number"
               id="pomodoro"
+              min={0}
               value={pomodoro}
               onChange={(e) => setPomodoro(e.target.value)}
               className={styles.input}

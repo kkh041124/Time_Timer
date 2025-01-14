@@ -4,7 +4,13 @@ import styles from "./TaskCard.module.css";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
-const TaskCard = ({ task, isOverlay = false, activeId }) => {
+const TaskCard = ({
+  task,
+  isOverlay = false,
+  activeId,
+  onDelete,
+  onCardClick,
+}) => {
   const {
     attributes,
     listeners,
@@ -36,10 +42,8 @@ const TaskCard = ({ task, isOverlay = false, activeId }) => {
       ? "border-green-500"
       : "border-gray-300";
 
-  // 드래그 중인 원본 카드(오버레이 X) → 투명
   const isDragging = activeId === task.id && !isOverlay;
 
-  // 오버레이로 렌더링 시 transform/transition 적용
   const style = isOverlay
     ? {
         transform: transform ? CSS.Translate.toString(transform) : undefined,
@@ -49,7 +53,18 @@ const TaskCard = ({ task, isOverlay = false, activeId }) => {
         opacity: isDragging ? 0 : 1,
       };
 
-  console.log("TaskCard Render - id:", task.id);
+  const handleCardClick = (e) => {
+    // 클릭 이벤트가 Trash 아이콘까지 전파되지 않도록 처리 가능
+    // e.stopPropagation();
+    if (onCardClick) {
+      onCardClick(task.id);
+    }
+  };
+
+  const handleDelete = (e) => {
+    e.stopPropagation(); // 클릭 이벤트 전파 방지
+    onDelete(task.id);
+  };
 
   return (
     <div
@@ -57,13 +72,14 @@ const TaskCard = ({ task, isOverlay = false, activeId }) => {
       {...attributes}
       className={`border-2 ${styles.taskCard} ${borderClass}`}
       style={style}
+      onClick={handleCardClick} // 카드 클릭 시 DetailPanel 열기
     >
       <div className={styles.cardHeader}>
         <div className={styles.checkboxContainer}>
           <Checkbox />
           <span className={styles.cardTitle}>{task.title}</span>
         </div>
-        <div className={styles.trashIconContainer}>
+        <div className={styles.trashIconContainer} onClick={handleDelete}>
           <Trash2 className={styles.trashIcon} />
         </div>
       </div>
