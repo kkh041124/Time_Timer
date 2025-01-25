@@ -1,0 +1,29 @@
+.detailPanel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  overflow-y: auto;
+  gap: 1rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem; /* header 내부 요소 간의 간격 */
+}
+
+.header .titleContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* checkbox와 title 사이의 간격 */
+}
+
+.header .actions {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}

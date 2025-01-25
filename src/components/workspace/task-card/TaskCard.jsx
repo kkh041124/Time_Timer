@@ -72,7 +72,7 @@ const TaskCard = ({
       {...attributes}
       className={`border-2 ${styles.taskCard} ${borderClass}`}
       style={style}
-      onClick={handleCardClick} // 카드 클릭 시 DetailPanel 열기
+      // 카드 클릭 시 DetailPanel 열기
     >
       <div className={styles.cardHeader}>
         <div className={styles.checkboxContainer}>
@@ -83,7 +83,7 @@ const TaskCard = ({
           <Trash2 className={styles.trashIcon} />
         </div>
       </div>
-      <div className={styles.cardContent}>
+      <div className={styles.cardContent} onClick={handleCardClick}>
         <div className={styles.priorityContainer}>
           {Array.from({ length: task.priority }, (_, index) => (
             <span key={index} className={styles.starIcon}>

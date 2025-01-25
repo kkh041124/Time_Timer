@@ -1,16 +1,15 @@
-import { X, Plus } from "lucide-react";
-import styles from "./WorkSpace.module.css";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
-
+import TaskGrid from "../../components/workspace/task-grid/TaskGrid";
 import FolderPanel from "../../components/workspace/folder-panel/FolderPanel";
 import TaskFilters from "../../components/workspace/task-filters/TaskFilters";
-import TaskGrid from "../../components/workspace/task-grid/TaskGrid";
 import TaskStats from "../../components/workspace/task-stats/TaskStats";
 import AddTaskModal from "../../components/workspace/AddTaskModal/AddTaskModal";
-import TaskCard from "../../components/workspace/task-card/TaskCard";
 import DetailPanel from "../../components/workspace/detail-panel/DetailPanel";
+import TaskCard from "../../components/workspace/task-card/TaskCard";
+import styles from "./WorkSpace.module.css";
+import { X, Plus } from "lucide-react";
 
 const WorkSpace = () => {
   const navigate = useNavigate();
@@ -21,6 +20,7 @@ const WorkSpace = () => {
   const [isModalOpen, setModalOpen] = useState(false); // 작업 추가 모달 열림 상태
   const [isDetailOpen, setIsDetailOpen] = useState(false); // 상세 패널 열림 상태
   const [selectedTaskId, setSelectedTaskId] = useState(null); // 선택된 태스크 ID
+
   useEffect(() => {
     const stored = localStorage.getItem("tasks");
     if (stored) {
@@ -30,31 +30,24 @@ const WorkSpace = () => {
       // 0번 ID → 교정
       tasksArray = tasksArray.map((task) => {
         if (task.id === 0) {
-          task.id = idRef.current;
-          idRef.current += 1;
+          task.id = idRef.current++;
           changed = true;
         }
         return task;
       });
 
-      const maxId = Math.max(...tasksArray.map((t) => t.id ?? 1));
-      idRef.current = Math.max(idRef.current, maxId + 1);
-
       if (changed) {
         localStorage.setItem("tasks", JSON.stringify(tasksArray));
       }
+
       setTasks(tasksArray);
-    } else {
-      setTasks([]);
     }
   }, []);
 
   useEffect(() => {
     if (tasks.length > 0) {
-      const maxId = Math.max(...tasks.map((t) => t.id ?? 1));
-      idRef.current = Math.max(idRef.current, maxId + 1);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
     }
-    localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
   // 모달 열기/닫기
@@ -63,11 +56,7 @@ const WorkSpace = () => {
 
   // 새 태스크 추가
   const handleAddTask = (task) => {
-    setTasks((prev) => {
-      const newTask = { ...task, id: idRef.current };
-      idRef.current += 1;
-      return [...prev, newTask];
-    });
+    setTasks((prev) => [...prev, { ...task, id: idRef.current++ }]);
     setModalOpen(false);
   };
 
@@ -99,8 +88,7 @@ const WorkSpace = () => {
   // detail panel
   const handleCardClick = (id) => {
     if (selectedTaskId === id) {
-      setIsDetailOpen(false);
-      setSelectedTaskId(null);
+      setIsDetailOpen(!isDetailOpen);
     } else {
       setSelectedTaskId(id);
       setIsDetailOpen(true);
@@ -129,8 +117,8 @@ const WorkSpace = () => {
           <FolderPanel />
         </div>
 
-        {/* 오른쪽 메인 영역 */}
-        <div className={styles.rightPane}>
+        {/* 중앙 카드 패널 */}
+        <div className={styles.centerPane}>
           {/* 상단 필터 & 통계영역 */}
           <div className={styles.topSection}>
             <TaskFilters />
@@ -156,7 +144,7 @@ const WorkSpace = () => {
                 tasks={tasks}
                 activeId={activeId}
                 onDelete={handleDeleteTask}
-                onCardClick={handleCardClick} // 카드 클릭시 핸들러
+                onCardClick={handleCardClick}
               />
             </div>
 
@@ -171,7 +159,8 @@ const WorkSpace = () => {
           </DndContext>
         </div>
 
-        <div className={styles.detailPanelContainer}>
+        {/* 오른쪽 상세 패널 */}
+        <div className={`${styles.rightPane} ${isDetailOpen ? styles.open : ""}`}>
           {isDetailOpen && selectedTask && (
             <DetailPanel task={selectedTask} onClose={closeDetail} />
           )}
