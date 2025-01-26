@@ -3,27 +3,108 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding: 1rem;
+  /* 스크롤 처리 */
   overflow-y: auto;
-  gap: 1rem;
 }
 
+/* 헤더 */
 .header {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem; /* header 내부 요소 간의 간격 */
+  font-size: 1.25rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1.5rem;
 }
 
-.header .titleContainer {
+.titleContainer {
   display: flex;
   align-items: center;
-  gap: 1rem; /* checkbox와 title 사이의 간격 */
+  gap: 1rem;
 }
 
-.header .actions {
+.actions {
   display: flex;
-  flex-direction: row;
   gap: 1rem;
+}
+
+/* 태그 섹션 (tagContent) */
+.tagContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem; /* p 태그와 tagAddButton 사이의 간격 */
+  padding: 1rem 1.5rem;
+  /* 상하 1rem, 좌우 1.5rem 여백(임의로 추가 가능) */
+}
+
+/* 태그 추가 버튼 */
+.tagAddButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+}
+
+.tagAddButton:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+/* 본문 컨테이너 */
+.content {
+  display: flex;
+  flex-direction: column;
+  /* 위에서 tagContent가 끝난 뒤, 본문이 시작됨 */
+  padding: 0 1.5rem 2rem;
+  gap: 1.5rem;
+}
+
+/* 한 줄짜리 아이템 (뽀모도로, 마감일, 프로젝트 등) */
+.rowItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+}
+
+/* 아이콘 + 라벨을 묶은 부분 */
+.iconAndLabel {
+  display: flex;
+  align-items: center;
+}
+
+/* 이모지 크기 */
+.emoji {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+/* 라벨(뽀모도로수, 마감일 등) */
+.label {
+  font-size: 0.95rem;
+  color: #71717a; /* 살짝 회색 */
+}
+
+/* 값(예: 2/4 = 50분, 오늘, 없음 등) */
+.value {
+  font-size: 0.95rem;
+  color: #000;
+}
+
+/* 구분선 */
+.divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 0; /* hr 태그 위아래 여백 제거 */
+}
+
+/* 노트 섹션 */
+.noteSection {
+  margin-top: 0.75rem; /* 설명/노트 위쪽 여백 */
+}
+.noteSection input:focus {
+  outline: none;
 }
