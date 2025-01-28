@@ -1,10 +1,22 @@
-/* TaskGrid.module.css */
+/* 기본 TaskGrid 레이아웃 */
 .TaskGrid {
-  /* 그리드 레이아웃 */
   display: grid;
-  /* 카드 최소 폭을 420px, 화면 충분히 넓으면 자동으로 여러 개 배치 */
-  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
   gap: 16px;
   width: 100%;
   box-sizing: border-box;
+  transition: grid-template-columns 0.3s ease; /* 애니메이션 추가 */
+}
+
+/* DetailPanel이 닫혀 있을 때 */
+.TaskGrid.detailClosed {
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+}
+
+/* DetailPanel이 열려 있을 때 */
+.TaskGrid.detailOpen {
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(500px, 1fr)
+  ); /* 카드 수 줄이기 */
 }

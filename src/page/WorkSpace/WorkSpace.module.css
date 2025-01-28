@@ -1,5 +1,5 @@
+/* WorkSpace */
 .WorkSpace {
-  /* 세로로 전체 화면 차지 */
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -7,7 +7,7 @@
   background-color: #f3f4f6;
 }
 
-/* 상단 헤더 */
+/* Header */
 .header {
   display: flex;
   align-items: center;
@@ -15,7 +15,6 @@
   padding: 1rem;
   background-color: #ffffff;
   border-bottom: 1px solid #e8e8eb;
-  flex-shrink: 0;
 }
 
 .title {
@@ -29,14 +28,15 @@
   cursor: pointer;
 }
 
-/* 메인 영역 - 왼쪽 폴더 패널 + 중앙 카드 패널 + 오른쪽 상세 패널 */
+/* Main layout */
 .main {
   flex: 1;
   display: flex;
   overflow: hidden;
+  position: relative; /* 필요 시 DetailPanel의 위치를 기준으로 */
 }
 
-/* 왼쪽 폴더 패널 */
+/* Left panel */
 .leftPane {
   width: 240px;
   background-color: #f9fafb;
@@ -44,7 +44,7 @@
   overflow-y: auto;
 }
 
-/* 중앙 카드 패널 */
+/* Center panel */
 .centerPane {
   flex: 1;
   display: flex;
@@ -52,55 +52,54 @@
   padding: 1rem 1.5rem;
   gap: 1rem;
   overflow-y: auto;
+  transition: flex 0.3s ease; /* 반응형 변경 애니메이션 */
 }
 
-/* 오른쪽 상세 패널 */
+.centerPane.detailOpen {
+  flex: 0.7; /* DetailPanel 열릴 때 크기 조정 */
+}
+
+/* Right panel (DetailPanel) */
 .rightPane {
-  width: 0;
+  flex: 0; /* 기본적으로 숨김 상태 */
+  max-width: 500px;
   background-color: #ffffff;
   border-left: 2px solid #e8e8eb;
   overflow-y: auto;
-  transition: width 0.3s ease;
+  transition: flex 0.3s ease, max-width 0.3s ease; /* 부드러운 애니메이션 */
 }
 
 .rightPane.open {
-  width: 500px;
+  flex: 0.3; /* DetailPanel이 열리면 화면 비율로 크기 조정 */
+  max-width: 500px; /* 최대 너비 제한 */
 }
 
-/* 상단 필터와 통계 부분을 한 줄에 */
-.topSection {
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-  flex-wrap: wrap; /* 화면이 작으면 다음 줄로 넘어감 */
+/* Task grid */
+.taskGridContainer {
+  flex: 1;
+  overflow-y: auto;
 }
 
-/* 작업 섹션 헤더 (제목 + 버튼) */
 .tasksHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 1rem;
 }
+
 .tasksHeader h2 {
   font-size: 1.5rem;
   font-weight: bold;
 }
+
 .addTaskButton {
-  font-size: 1rem;
-  color: #ffffff;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   background-color: #18181b;
+  color: #ffffff;
   border: 1px solid #e8e8eb;
   border-radius: 10px;
   padding: 0.5rem 1rem;
   cursor: pointer;
-}
-
-/* 실제 카드 그리드가 들어가는 래퍼 */
-.taskGridContainer {
-  flex: 1; /* 아래로 공간 늘림 */
-  overflow-y: auto;
 }

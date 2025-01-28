@@ -13,21 +13,20 @@ import { X, Plus } from "lucide-react";
 
 const WorkSpace = () => {
   const navigate = useNavigate();
+  const [tasks, setTasks] = useState([]);
+  const idRef = useRef(1);
+  const [activeId, setActiveId] = useState(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
 
-  const [tasks, setTasks] = useState([]); // 로컬 스토리지에서 불러와서 state 세팅
-  const idRef = useRef(1); // ID 발급용 ref
-  const [activeId, setActiveId] = useState(null); // 드래그 중인 카드의 ID
-  const [isModalOpen, setModalOpen] = useState(false); // 작업 추가 모달 열림 상태
-  const [isDetailOpen, setIsDetailOpen] = useState(false); // 상세 패널 열림 상태
-  const [selectedTaskId, setSelectedTaskId] = useState(null); // 선택된 태스크 ID
-
+  // Load tasks from localStorage
   useEffect(() => {
     const stored = localStorage.getItem("tasks");
     if (stored) {
       let tasksArray = JSON.parse(stored);
       let changed = false;
 
-      // 0번 ID → 교정
       tasksArray = tasksArray.map((task) => {
         if (task.id === 0) {
           task.id = idRef.current++;
@@ -44,31 +43,27 @@ const WorkSpace = () => {
     }
   }, []);
 
+  // Save tasks to localStorage on update
   useEffect(() => {
     if (tasks.length > 0) {
       localStorage.setItem("tasks", JSON.stringify(tasks));
     }
   }, [tasks]);
 
-  // 모달 열기/닫기
+  // Add task modal handlers
   const handleAddTaskClick = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
-
-  // 새 태스크 추가
   const handleAddTask = (task) => {
     setTasks((prev) => [...prev, { ...task, id: idRef.current++ }]);
     setModalOpen(false);
   };
 
-  // 드래그
-  const handleDragStart = (event) => {
-    setActiveId(event.active.id);
-  };
+  // Drag and drop handlers
+  const handleDragStart = (event) => setActiveId(event.active.id);
   const handleDragEnd = (event) => {
     const { active, over } = event;
     setActiveId(null);
     if (!over) return;
-    if (active.id === over.id) return;
 
     const oldIndex = tasks.findIndex((t) => t.id === active.id);
     const newIndex = tasks.findIndex((t) => t.id === over.id);
@@ -79,30 +74,33 @@ const WorkSpace = () => {
     updated.splice(newIndex, 0, moved);
     setTasks(updated);
   };
+
+  // Delete task handler
   const handleDeleteTask = (id) => {
     const newTasks = tasks.filter((task) => task.id !== id);
     setTasks(newTasks);
     localStorage.setItem("tasks", JSON.stringify(newTasks));
   };
 
-  // detail panel
+  // DetailPanel handlers
   const handleCardClick = (id) => {
     if (selectedTaskId === id) {
-      setIsDetailOpen(!isDetailOpen);
+      setIsDetailOpen(!isDetailOpen); // Toggle DetailPanel
     } else {
       setSelectedTaskId(id);
-      setIsDetailOpen(true);
+      setIsDetailOpen(true); // Open DetailPanel for a new task
     }
   };
+
   const closeDetail = () => {
-    setIsDetailOpen(false);
+    setIsDetailOpen(false); // Close DetailPanel
     setSelectedTaskId(null);
   };
-  const selectedTask = tasks.find((t) => t.id === selectedTaskId) || null;
+
+  const isDragging = activeId !== null;
 
   return (
     <div className={styles.WorkSpace}>
-      {/* 상단 헤더 영역 */}
       <header className={styles.header}>
         <h1 className={styles.title}>WorkSpace</h1>
         <button className={styles.closeButton} onClick={() => navigate("/")}>
@@ -110,22 +108,21 @@ const WorkSpace = () => {
         </button>
       </header>
 
-      {/* 좌우 레이아웃 */}
       <div className={styles.main}>
-        {/* 왼쪽 폴더 패널 */}
         <div className={styles.leftPane}>
           <FolderPanel />
         </div>
 
-        {/* 중앙 카드 패널 */}
-        <div className={styles.centerPane}>
-          {/* 상단 필터 & 통계영역 */}
+        <div
+          className={`${styles.centerPane} ${
+            isDetailOpen ? styles.detailOpen : ""
+          }`}
+        >
           <div className={styles.topSection}>
             <TaskFilters />
             <TaskStats />
           </div>
 
-          {/* 작업 섹션 헤더 + 작업 추가 버튼 */}
           <div className={styles.tasksHeader}>
             <h2>작업</h2>
             <button
@@ -137,7 +134,6 @@ const WorkSpace = () => {
             </button>
           </div>
 
-          {/* Drag & Drop 컨텍스트 */}
           <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
             <div className={styles.taskGridContainer}>
               <TaskGrid
@@ -159,15 +155,27 @@ const WorkSpace = () => {
           </DndContext>
         </div>
 
-        {/* 오른쪽 상세 패널 */}
-        <div className={`${styles.rightPane} ${isDetailOpen ? styles.open : ""}`}>
-          {isDetailOpen && selectedTask && (
-            <DetailPanel task={selectedTask} onClose={closeDetail} />
+        <div
+          className={`${styles.rightPane} ${isDetailOpen ? styles.open : ""}`}
+        >
+          {isDetailOpen && selectedTaskId && (
+            <DetailPanel
+              task={tasks.find((t) => t.id === selectedTaskId)}
+              onClose={closeDetail}
+              onDescriptionChange={(newDescription) =>
+                setTasks((prev) =>
+                  prev.map((task) =>
+                    task.id === selectedTaskId
+                      ? { ...task, description: newDescription }
+                      : task
+                  )
+                )
+              }
+            />
           )}
         </div>
       </div>
 
-      {/* 모달 */}
       {isModalOpen && (
         <AddTaskModal
           isOpen={isModalOpen}

@@ -3,7 +3,7 @@ import styles from "./DetailPanel.module.css";
 import { Checkbox } from "@/components/ui/checkbox";
 import { X, Flag, Bell, Plus } from "lucide-react";
 
-const DetailPanel = ({ task, onClose }) => {
+const DetailPanel = ({ task, onClose, onDescriptionChange }) => {
   if (!task) return null;
 
   const [description, setDescription] = useState(task.description || "");
@@ -35,7 +35,11 @@ const DetailPanel = ({ task, onClose }) => {
     text: "미정",
     className: "bg-gray-500",
   };
-
+  const handleDescriptionChange = (e) => {
+    const newDescription = e.target.value;
+    setDescription(newDescription);
+    onDescriptionChange(newDescription); // 부모 컴포넌트에 변경 사항 전달
+  };
   return (
     <div className={styles.detailPanel}>
       {/* 헤더 영역 */}
@@ -121,7 +125,7 @@ const DetailPanel = ({ task, onClose }) => {
             className={styles.noteInput}
             value={description}
             placeholder="노트 추가..."
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={handleDescriptionChange}
           />
         </div>
       </div>
