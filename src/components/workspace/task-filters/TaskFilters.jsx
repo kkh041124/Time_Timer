@@ -3,8 +3,16 @@ import { Smile, Clock, Calendar, Flag, CheckSquare } from "lucide-react";
 
 import { useState } from "react";
 
-const TaskFilters = () => {
+const TaskFilters = ({ tasks }) => {
   const [activeFilter, setActiveFilter] = useState(null);
+  const formatDate = (date) => {
+    if (!date) return "미정";
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}.${month}.${day}`;
+  };
 
   const filters = [
     { id: "today", icon: <Smile />, title: "오늘" },

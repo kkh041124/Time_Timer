@@ -119,7 +119,7 @@ const WorkSpace = () => {
           }`}
         >
           <div className={styles.topSection}>
-            <TaskFilters />
+            <TaskFilters tasks={tasks} />
             <TaskStats />
           </div>
 
