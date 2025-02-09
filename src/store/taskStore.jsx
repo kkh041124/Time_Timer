@@ -25,6 +25,8 @@ const useTaskStore = create(
             task.id === taskId ? { ...task, ...updatedData } : task
           ),
         })),
+      filter: "all",
+      setFilter: (filter) => set(() => ({ filter })),
     }),
     {
       name: "task-storage",

@@ -3,7 +3,6 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  /* 스크롤 처리 */
   overflow-y: auto;
 }
 
@@ -28,32 +27,79 @@
   gap: 1rem;
 }
 
-/* 태그 섹션 (tagContent) */
+/* 🏷️ 태그 스타일 */
 .tagContent {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 1rem; /* p 태그와 tagAddButton 사이의 간격 */
+  gap: 0.5rem;
   padding: 1rem 1.5rem;
-  /* 상하 1rem, 좌우 1.5rem 여백(임의로 추가 가능) */
+}
+
+.tagContainer {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background-color: #ffffff;
+  color: #4f46e5;
+  border-radius: 12px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tag .removeTag {
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  color: #ef4444;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.tag .removeTag:hover {
+  color: #dc2626;
 }
 
 /* 태그 추가 버튼 */
 .tagAddButton {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
   border-radius: 20px;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .tagAddButton:hover {
-  background-color: #f9f9f9;
-  cursor: pointer;
+  background-color: #f3f4f6;
 }
 
-/* 상태 섹션 (statusContent) */
+.tagInput {
+  border: none;
+  font-size: 0.9rem;
+  background: transparent;
+  width: 100px;
+}
+
+.tagInput:focus {
+  outline: none;
+  border-bottom: 1px solid #3b82f6;
+}
+
+/* 📌 커스텀 상태 드롭다운 */
 .statusContent {
   display: flex;
   flex-direction: column;
@@ -62,36 +108,81 @@
   border-top: 1px solid #e0e0e0;
 }
 
-.statusContainer {
+.statusDropdown {
+  position: relative;
+  width: 150px;
+}
+
+.statusDropdown button {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  background-color: #f9fafb;
+  cursor: pointer;
+  font-size: 1rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  justify-content: space-between;
+  border-radius: 8px;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.statusContent h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
-  margin: 0;
+.statusDropdown button:hover {
+  background-color: #f3f4f6;
 }
 
-.statusContainer .statusCircle {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+.statusOptions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  z-index: 10;
+}
+
+.statusDropdown.open .statusOptions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.statusOption {
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.statusOption:hover {
+  background-color: #f3f4f6;
+}
+
+/* 상태별 색상 */
+.statusTodo {
+  color: #9ca3af;
+}
+
+.statusInProgress {
+  color: #3b82f6;
+}
+
+.statusDone {
+  color: #10b981;
 }
 
 /* 본문 컨테이너 */
 .content {
   display: flex;
   flex-direction: column;
-  /* 위에서 tagContent가 끝난 뒤, 본문이 시작됨 */
   padding: 0 1.5rem 2rem;
   gap: 1.5rem;
 }
 
-/* 한 줄짜리 아이템 (뽀모도로, 마감일, 프로젝트 등) */
+/* 한 줄짜리 아이템 */
 .rowItem {
   display: flex;
   align-items: center;
@@ -99,27 +190,25 @@
   padding: 0.75rem 0;
 }
 
-/* 아이콘 + 라벨을 묶은 부분 */
 .iconAndLabel {
   display: flex;
   align-items: center;
 }
 
-/* 이모지 크기 */
 .emoji {
   font-size: 1.2rem;
   margin-right: 0.5rem;
 }
 
-/* 라벨(뽀모도로수, 마감일 등) */
+/* 라벨 */
 .label {
-  font-size: 0.95rem;
-  color: #71717a; /* 살짝 회색 */
+  font-size: 1rem;
+  color: #71717a;
 }
 
-/* 값(예: 2/4 = 50분, 오늘, 없음 등) */
+/* 값 */
 .value {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #000;
 }
 
@@ -127,14 +216,22 @@
 .divider {
   border: none;
   border-top: 1px solid #e0e0e0;
-  margin: 0; /* hr 태그 위아래 여백 제거 */
+  margin: 0;
 }
 
 /* 노트 섹션 */
 .noteSection {
-  margin-top: 0.75rem; /* 설명/노트 위쪽 여백 */
+  margin-top: 0.75rem;
 }
 
-.noteSection input:focus {
+.noteInput {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.noteInput:focus {
   outline: none;
+  border-color: #6b7280;
 }

@@ -1,19 +1,22 @@
 import { useState } from "react";
 import styles from "./DetailPanel.module.css";
 import { Checkbox } from "@/components/ui/checkbox";
-import { X, Flag, Bell, Plus } from "lucide-react";
+import { X, Flag, Bell, Plus, ChevronDown } from "lucide-react";
 import useTaskStore from "../../../store/taskStore";
 
 const DetailPanel = () => {
   const { selectedTaskId, tasks, isDetailOpen, setIsDetailOpen, updateTask } =
     useTaskStore();
 
-  if (!isDetailOpen || !selectedTaskId) return null; // 선택된 Task가 없거나, 패널이 닫혀 있으면 렌더링하지 않음
+  if (!isDetailOpen || !selectedTaskId) return null;
 
   const task = tasks.find((t) => t.id === selectedTaskId);
-  if (!task) return null; // Task가 없으면 리턴
+  if (!task) return null;
 
   const [description, setDescription] = useState(task.description || "");
+  const [newTag, setNewTag] = useState("");
+  const [title, setTitle] = useState(task.title);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 상태
 
   const pomodoroText = task.pomodoro || "0/0 = 0분";
 
@@ -29,22 +32,38 @@ const DetailPanel = () => {
   const newDate = task.dueDate ? formatDate(new Date(task.dueDate)) : "미정";
 
   const statusMap = {
-    todo: { text: "대기 중", className: "bg-gray-500" },
-    inProgress: { text: "진행 중", className: "bg-blue-500" },
-    done: { text: "완료", className: "bg-green-500" },
+    todo: { text: "대기 중", className: styles.statusTodo },
+    inProgress: { text: "진행 중", className: styles.statusInProgress },
+    done: { text: "완료", className: styles.statusDone },
   };
 
-  const { text: newStatus, className: circleClass } = statusMap[
-    task.status
-  ] || {
-    text: "미정",
-    className: "bg-gray-500",
-  };
-
+  // 설명 변경
   const handleDescriptionChange = (e) => {
     const newDescription = e.target.value;
     setDescription(newDescription);
-    updateTask(selectedTaskId, { description: newDescription }); // Zustand 상태 업데이트
+    updateTask(selectedTaskId, { description: newDescription });
+  };
+
+  // 태그 추가
+  const handleAddTag = (e) => {
+    if (e.key === "Enter" && newTag.trim() !== "") {
+      const updatedTags = [...(task.tags || []), newTag.trim()];
+      updateTask(selectedTaskId, { tags: updatedTags });
+      setNewTag("");
+    }
+  };
+
+  // 제목 변경
+  const handleTitleBlur = () => {
+    if (title.trim() !== task.title) {
+      updateTask(selectedTaskId, { title });
+    }
+  };
+
+  // 상태 변경 핸들러
+  const handleStatusChange = (newStatus) => {
+    updateTask(selectedTaskId, { status: newStatus });
+    setIsDropdownOpen(false); // 드롭다운 닫기
   };
 
   return (
@@ -52,7 +71,15 @@ const DetailPanel = () => {
       <div className={styles.header}>
         <div className={styles.titleContainer}>
           <Checkbox />
-          <span className={styles.title}>{task.title}</span>
+          <span
+            className={styles.title}
+            contentEditable={true}
+            suppressContentEditableWarning={true}
+            onBlur={handleTitleBlur}
+            onInput={(e) => setTitle(e.currentTarget.textContent)}
+          >
+            {title}
+          </span>
         </div>
         <div className={styles.actions}>
           <Flag />
@@ -62,23 +89,68 @@ const DetailPanel = () => {
         </div>
       </div>
 
+      {/* 태그 관리 */}
       <div className={styles.tagContent}>
-        <p>{task.tags?.join(", ") || "태그 없음"}</p>
+        <div className={styles.tagContainer}>
+          {task.tags?.map((tag, index) => (
+            <span key={index} className={styles.tag}>
+              {tag}
+              <button
+                className={styles.removeTag}
+                onClick={() =>
+                  updateTask(selectedTaskId, {
+                    tags: task.tags.filter((t) => t !== tag),
+                  })
+                }
+              >
+                ❌
+              </button>
+            </span>
+          ))}
+        </div>
         <div className={styles.tagAddButton}>
-          <button>
+          <input
+            type="text"
+            placeholder="태그 추가..."
+            value={newTag}
+            onChange={(e) => setNewTag(e.target.value)}
+            onKeyDown={handleAddTag}
+            className={styles.tagInput}
+          />
+          <button onClick={() => handleAddTag({ key: "Enter" })}>
             <Plus />
           </button>
-          <h2>태그</h2>
         </div>
       </div>
 
+      {/* 상태 변경 드롭다운 */}
       <div className={styles.statusContent}>
         <h3>상태</h3>
-        <div className={styles.statusContainer}>
-          <div className={`${circleClass} h-3 w-3 rounded-full mr-2`}></div>
-          <p>{newStatus}</p>
+        <div
+          className={`${styles.statusDropdown} ${
+            isDropdownOpen ? styles.open : ""
+          }`}
+        >
+          <button onClick={() => setIsDropdownOpen((prev) => !prev)}>
+            <span className={statusMap[task.status]?.className}>
+              {statusMap[task.status]?.text}
+            </span>
+            <ChevronDown />
+          </button>
+          {isDropdownOpen && (
+            <div className={styles.statusOptions}>
+              {Object.entries(statusMap).map(([key, { text }]) => (
+                <div
+                  key={key}
+                  className={styles.statusOption}
+                  onClick={() => handleStatusChange(key)}
+                >
+                  {text}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-        <hr className={styles.divider} />
       </div>
 
       <div className={styles.content}>

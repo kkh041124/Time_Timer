@@ -8,14 +8,43 @@ const TaskGrid = () => {
     activeId,
     isDetailOpen,
     removeTask,
+    selectedTaskId,
     setSelectedTaskId,
     setIsDetailOpen,
+    filter,
   } = useTaskStore();
 
-  // 카드 클릭 시 DetailPanel 열기
+  // 필터링된 작업 목록 반환
+  const getFilteredTasks = () => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // 현재 시간을 00:00:00으로 설정하여 비교
+
+    return tasks.filter((task) => {
+      if (!task.dueDate) return false; // 마감일이 없으면 필터링하지 않음
+
+      const taskDate = new Date(task.dueDate);
+      taskDate.setHours(0, 0, 0, 0); // 마감일의 시간도 00:00:00으로 맞추기
+      const dayDiff = Math.floor((taskDate - now) / (1000 * 60 * 60 * 24)); // 날짜 차이 계산
+
+      switch (filter) {
+        case "today":
+          return dayDiff === 0;
+        case "tomorrow":
+          return dayDiff === 1;
+        case "week":
+          return dayDiff >= 0 && dayDiff <= 6;
+        case "finished":
+          return task.status === "done";
+        case "all":
+        default:
+          return true; // 전체 보기
+      }
+    });
+  };
+
   const handleCardClick = (id) => {
-    if (id === useTaskStore.getState().selectedTaskId) {
-      setIsDetailOpen(!isDetailOpen); // 같은 Task 클릭 시 패널 닫기
+    if (id === selectedTaskId) {
+      setIsDetailOpen(!isDetailOpen);
     } else {
       setSelectedTaskId(id);
       setIsDetailOpen(true);
@@ -28,13 +57,13 @@ const TaskGrid = () => {
         isDetailOpen ? styles.detailOpen : styles.detailClosed
       }`}
     >
-      {tasks.map((task) => (
+      {getFilteredTasks().map((task) => (
         <TaskCard
           key={task.id}
           task={task}
           activeId={activeId}
-          onDelete={() => removeTask(task.id)} // Zustand에서 삭제 함수 호출
-          onCardClick={() => handleCardClick(task.id)} // 상태 업데이트
+          onDelete={() => removeTask(task.id)}
+          onCardClick={() => handleCardClick(task.id)}
         />
       ))}
     </div>

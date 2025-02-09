@@ -1,61 +1,67 @@
 .TaskFilters {
   width: 100%;
-  height: 52px; /* 높이 고정 */
-  background-color: #e5e7eb;
-  border-radius: 10px;
+  height: 50px;
+  background: #e5e7eb; /* WorkSpace 배경과 유사한 부드러운 회색 */
+  border-radius: 12px;
   display: flex;
-  flex-direction: row;
-  gap: 16px;
+  align-items: center;
+  gap: 12px;
   padding: 0 16px;
   box-sizing: border-box;
-  justify-content: flex-start;
-  align-items: center;
+  overflow-x: auto; /* 가로 스크롤 */
+  white-space: nowrap;
+  scrollbar-width: none;
 }
 
 .Filter {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: row;
-  padding: 8px 12px;
-  margin: 4px;
-  border-radius: 4px;
-  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  gap: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: all 0.2s ease-in-out;
   box-sizing: border-box;
+  font-weight: 500;
+  font-size: 15px;
+  color: #4b5563; /* 회색톤 유지 */
+  background-color: transparent;
 }
 
-.Filter:hover,
-.Filter:focus {
-  background-color: #f2f3f5; /* 배경색 변화 */
-  transform: scale(1.05); /* 크기 확대 */
-  outline: none;
+.Filter:hover {
+  background: rgba(31, 41, 55, 0.08); /* 어두운 회색 계열로 은은한 강조 */
+  transform: scale(1.05);
 }
 
 .Filter.active {
-  background-color: #f2f3f5;
-  font-weight: bold;
-  box-sizing: border-box;
+  background: #3b82f6; /* 파란색 강조 */
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0px 2px 6px rgba(59, 130, 246, 0.3);
 }
 
 .Filter h2 {
-  font-size: 16px;
-  font-weight: normal;
+  font-size: 15px;
+  font-weight: 500;
   margin: 0;
 }
 
 @media (max-width: 768px) {
   .TaskFilters {
-    flex-direction: column; /* 작은 화면에서 세로 정렬 */
-    height: auto; /* 세로 정렬 시 자동 높이 */
-    gap: 8px; /* 간격 축소 */
-    padding: 8px; /* 상하좌우 패딩 조정 */
+    flex-direction: row;
+    height: auto;
+    gap: 6px;
+    padding: 8px 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-radius: 8px;
   }
 
   .Filter {
-    width: 100%; /* 필터가 전체 폭을 채움 */
-    justify-content: flex-start; /* 텍스트 왼쪽 정렬 */
-    height: 52px; /* 세로 높이 동일 */
+    padding: 8px 12px;
+    font-size: 14px;
+    gap: 4px;
   }
 }

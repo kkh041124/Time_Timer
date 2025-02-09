@@ -18,7 +18,9 @@ const WorkSpace = () => {
 
   const {
     tasks,
-    setTasks,
+    addTask,
+    removeTask,
+    updateTask,
     modalOpen,
     setModalOpen,
     isDetailOpen,
@@ -27,42 +29,39 @@ const WorkSpace = () => {
     setSelectedTaskId,
     activeId,
     setActiveId,
+    filter,
   } = useTaskStore();
 
-  // 기존 localStorage 관련 useEffect 제거
-  // Zustand persist가 localStorage를 자동으로 관리하므로 필요 없음
-
-  // Add Task
+  // 작업 추가 핸들러
   const handleAddTaskClick = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
   const handleAddTask = (task) => {
-    setTasks([...tasks, { ...task, id: idRef.current++ }]);
+    addTask({ ...task, id: idRef.current++ });
     setModalOpen(false);
   };
 
-  // Drag and Drop
+  // Drag & Drop 핸들러
   const handleDragStart = (event) => setActiveId(event.active.id);
   const handleDragEnd = (event) => {
     const { active, over } = event;
     setActiveId(null);
-    if (!over) return;
+    if (!over || active.id === over.id) return;
 
     const oldIndex = tasks.findIndex((t) => t.id === active.id);
     const newIndex = tasks.findIndex((t) => t.id === over.id);
     if (oldIndex < 0 || newIndex < 0) return;
 
-    const updated = [...tasks];
-    const [moved] = updated.splice(oldIndex, 1);
-    updated.splice(newIndex, 0, moved);
-    setTasks(updated);
+    const updatedTasks = [...tasks];
+    const [moved] = updatedTasks.splice(oldIndex, 1);
+    updatedTasks.splice(newIndex, 0, moved);
+
+    updateTask(active.id, { order: newIndex }); // 순서 정보 업데이트
   };
 
-  // Delete Task
-  const handleDeleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
+  // 작업 삭제 핸들러
+  const handleDeleteTask = (id) => removeTask(id);
 
-  // DetailPanel
+  // 작업 상세 패널 핸들러
   const handleCardClick = (id) => {
     if (selectedTaskId === id) {
       setIsDetailOpen(!isDetailOpen);
@@ -77,7 +76,33 @@ const WorkSpace = () => {
     setSelectedTaskId(null);
   };
 
-  const isDragging = activeId !== null;
+  // 필터링된 작업 목록 반환
+  const getFilteredTasks = () => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // 현재 시간을 00:00:00으로 설정하여 비교
+
+    return tasks.filter((task) => {
+      if (!task.dueDate) return false; // 마감일 없는 작업 제외
+
+      const taskDate = new Date(task.dueDate);
+      taskDate.setHours(0, 0, 0, 0); // 마감일의 시간도 00:00:00으로 맞추기
+      const dayDiff = Math.floor((taskDate - now) / (1000 * 60 * 60 * 24)); // 날짜 차이 계산
+
+      switch (filter) {
+        case "today":
+          return dayDiff === 0;
+        case "tomorrow":
+          return dayDiff === 1;
+        case "week":
+          return dayDiff >= 0 && dayDiff <= 6;
+        case "finished":
+          return task.status === "done";
+        case "all":
+        default:
+          return true; // 전체 보기
+      }
+    });
+  };
 
   return (
     <div className={styles.WorkSpace}>
@@ -117,6 +142,7 @@ const WorkSpace = () => {
           <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
             <div className={styles.taskGridContainer}>
               <TaskGrid
+                tasks={getFilteredTasks()} // 필터링된 작업 전달
                 onDelete={handleDeleteTask}
                 onCardClick={handleCardClick}
               />

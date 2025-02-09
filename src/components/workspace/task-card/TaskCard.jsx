@@ -5,9 +5,8 @@ import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import useTaskStore from "../../../store/taskStore";
 
-const TaskCard = ({ task, isOverlay = false }) => {
-  const { activeId, setSelectedTaskId, setIsDetailOpen, removeTask } =
-    useTaskStore();
+const TaskCard = ({ task, isOverlay = false, onCardClick, onDelete }) => {
+  const { activeId } = useTaskStore();
 
   const {
     attributes,
@@ -51,21 +50,6 @@ const TaskCard = ({ task, isOverlay = false }) => {
         opacity: isDragging ? 0 : 1,
       };
 
-  // 카드 클릭 시 DetailPanel 열기/닫기
-  const handleCardClick = () => {
-    if (task.id === useTaskStore.getState().selectedTaskId) {
-      setIsDetailOpen(!useTaskStore.getState().isDetailOpen);
-    } else {
-      setSelectedTaskId(task.id);
-      setIsDetailOpen(true);
-    }
-  };
-
-  const handleDelete = (e) => {
-    e.stopPropagation(); // 클릭 이벤트 전파 방지
-    removeTask(task.id);
-  };
-
   return (
     <div
       ref={combinedRef}
@@ -78,11 +62,17 @@ const TaskCard = ({ task, isOverlay = false }) => {
           <Checkbox />
           <span className={styles.cardTitle}>{task.title}</span>
         </div>
-        <div className={styles.trashIconContainer} onClick={handleDelete}>
+        <div
+          className={styles.trashIconContainer}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(task.id);
+          }}
+        >
           <Trash2 className={styles.trashIcon} />
         </div>
       </div>
-      <div className={styles.cardContent} onClick={handleCardClick}>
+      <div className={styles.cardContent} onClick={() => onCardClick(task.id)}>
         <div className={styles.priorityContainer}>
           {Array.from({ length: task.priority }, (_, index) => (
             <span key={index} className={styles.starIcon}>
