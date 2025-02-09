@@ -2,13 +2,19 @@ import { useState } from "react";
 import styles from "./DetailPanel.module.css";
 import { Checkbox } from "@/components/ui/checkbox";
 import { X, Flag, Bell, Plus } from "lucide-react";
+import useTaskStore from "../../../store/taskStore";
 
-const DetailPanel = ({ task, onClose, onDescriptionChange }) => {
-  if (!task) return null;
+const DetailPanel = () => {
+  const { selectedTaskId, tasks, isDetailOpen, setIsDetailOpen, updateTask } =
+    useTaskStore();
+
+  if (!isDetailOpen || !selectedTaskId) return null; // 선택된 Task가 없거나, 패널이 닫혀 있으면 렌더링하지 않음
+
+  const task = tasks.find((t) => t.id === selectedTaskId);
+  if (!task) return null; // Task가 없으면 리턴
 
   const [description, setDescription] = useState(task.description || "");
 
-  // 뽀모도로 표시 예시: "2/4 = 50분" 형태, 없으면 "0/0 = 0분"
   const pomodoroText = task.pomodoro || "0/0 = 0분";
 
   const formatDate = (date) => {
@@ -22,7 +28,6 @@ const DetailPanel = ({ task, onClose, onDescriptionChange }) => {
 
   const newDate = task.dueDate ? formatDate(new Date(task.dueDate)) : "미정";
 
-  // 상태와 스타일 매핑 객체
   const statusMap = {
     todo: { text: "대기 중", className: "bg-gray-500" },
     inProgress: { text: "진행 중", className: "bg-blue-500" },
@@ -35,14 +40,15 @@ const DetailPanel = ({ task, onClose, onDescriptionChange }) => {
     text: "미정",
     className: "bg-gray-500",
   };
+
   const handleDescriptionChange = (e) => {
     const newDescription = e.target.value;
     setDescription(newDescription);
-    onDescriptionChange(newDescription); // 부모 컴포넌트에 변경 사항 전달
+    updateTask(selectedTaskId, { description: newDescription }); // Zustand 상태 업데이트
   };
+
   return (
     <div className={styles.detailPanel}>
-      {/* 헤더 영역 */}
       <div className={styles.header}>
         <div className={styles.titleContainer}>
           <Checkbox />
@@ -50,13 +56,12 @@ const DetailPanel = ({ task, onClose, onDescriptionChange }) => {
         </div>
         <div className={styles.actions}>
           <Flag />
-          <button onClick={onClose}>
+          <button onClick={() => setIsDetailOpen(false)}>
             <X className="h-6 w-6" />
           </button>
         </div>
       </div>
 
-      {/* 태그 관련 영역 */}
       <div className={styles.tagContent}>
         <p>{task.tags?.join(", ") || "태그 없음"}</p>
         <div className={styles.tagAddButton}>
@@ -67,7 +72,6 @@ const DetailPanel = ({ task, onClose, onDescriptionChange }) => {
         </div>
       </div>
 
-      {/* 상태 영역 */}
       <div className={styles.statusContent}>
         <h3>상태</h3>
         <div className={styles.statusContainer}>
@@ -77,9 +81,7 @@ const DetailPanel = ({ task, onClose, onDescriptionChange }) => {
         <hr className={styles.divider} />
       </div>
 
-      {/* 본문 영역 */}
       <div className={styles.content}>
-        {/* 뽀모도로 */}
         <div className={styles.rowItem}>
           <div className={styles.iconAndLabel}>
             <span className={styles.emoji}>🍅</span>
@@ -89,7 +91,6 @@ const DetailPanel = ({ task, onClose, onDescriptionChange }) => {
         </div>
         <hr className={styles.divider} />
 
-        {/* 마감일 */}
         <div className={styles.rowItem}>
           <div className={styles.iconAndLabel}>
             <span className={styles.emoji}>📅</span>
@@ -99,7 +100,6 @@ const DetailPanel = ({ task, onClose, onDescriptionChange }) => {
         </div>
         <hr className={styles.divider} />
 
-        {/* 프로젝트 */}
         <div className={styles.rowItem}>
           <div className={styles.iconAndLabel}>
             <span className={styles.emoji}>📁</span>
@@ -109,7 +109,6 @@ const DetailPanel = ({ task, onClose, onDescriptionChange }) => {
         </div>
         <hr className={styles.divider} />
 
-        {/* 미리 알림 (벨 아이콘 + 없음) */}
         <div className={styles.rowItem}>
           <div className={styles.iconAndLabel}>
             <Bell className="mr-2" />
@@ -119,7 +118,6 @@ const DetailPanel = ({ task, onClose, onDescriptionChange }) => {
         </div>
         <hr className={styles.divider} />
 
-        {/* 노트/설명 */}
         <div className={styles.noteSection}>
           <input
             className={styles.noteInput}

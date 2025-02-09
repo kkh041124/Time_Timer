@@ -1,10 +1,13 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Calendar, Star, X } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "./AddTaskModal.module.css";
+import useTaskStore from "../../../store/taskStore";
 
-const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
+const AddTaskModal = () => {
+  const { modalOpen, setModalOpen, addTask } = useTaskStore(); // Zustand 상태 사용
+
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("todo");
   const [dueDate, setDueDate] = useState(null);
@@ -14,22 +17,16 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
   const [priority, setPriority] = useState(0);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  const handleDateSelect = (date) => {
-    setDueDate(date);
-  };
-
-  const togglePriority = (value) => {
+  const handleDateSelect = (date) => setDueDate(date);
+  const togglePriority = (value) =>
     setPriority((prev) => (prev === value ? value - 1 : value));
-  };
-  const toggleCalendar = () => {
-    setIsCalendarOpen((prev) => !prev);
-  };
-  const handleTagsChange = (e) => {
+  const toggleCalendar = () => setIsCalendarOpen((prev) => !prev);
+  const handleTagsChange = (e) =>
     setTags(e.target.value.split(",").map((tag) => tag.trim()));
-  };
 
   const handleAddTask = () => {
     const newTask = {
+      id: Date.now(), // 고유 ID 추가
       title,
       status,
       dueDate,
@@ -38,9 +35,10 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
       tags,
       priority,
     };
-    onAddTask(newTask);
+    addTask(newTask); // Zustand의 상태 업데이트
+    setModalOpen(false); // 모달 닫기
 
-    onClose();
+    // 입력값 초기화
     setTitle("");
     setStatus("todo");
     setDueDate(null);
@@ -50,14 +48,17 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
     setPriority(0);
   };
 
-  if (!isOpen) return null;
+  if (!modalOpen) return null; // Zustand에서 모달 상태 확인
 
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.AddTaskModal}>
         <header className={styles.header}>
           <h2>새 작업 추가</h2>
-          <button className={styles.closeButton} onClick={onClose}>
+          <button
+            className={styles.closeButton}
+            onClick={() => setModalOpen(false)}
+          >
             <X className={styles.closeIcon} />
           </button>
         </header>
@@ -74,6 +75,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
               className={styles.input}
             />
           </div>
+
           <div className={styles.inputGroup}>
             <label htmlFor="status" className={styles.label}>
               상태
@@ -89,6 +91,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
               <option value="done">완료</option>
             </select>
           </div>
+
           <div className={styles.inputGroup}>
             <label htmlFor="dueDate" className={styles.label}>
               마감일
@@ -108,6 +111,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
               />
             </div>
           </div>
+
           <div className={styles.inputGroup}>
             <label htmlFor="pomodoro" className={styles.label}>
               뽀모도로 횟수
@@ -121,6 +125,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
               className={styles.input}
             />
           </div>
+
           <div className={styles.inputGroup}>
             <label htmlFor="description" className={styles.label}>
               설명
@@ -132,6 +137,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
               className={styles.textarea}
             />
           </div>
+
           <div className={styles.inputGroup}>
             <label htmlFor="tags" className={styles.label}>
               태그
@@ -145,6 +151,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
               placeholder="태그를 쉼표로 구분"
             />
           </div>
+
           <div className={styles.inputGroup}>
             <label htmlFor="priority" className={styles.label}>
               우선순위
@@ -164,6 +171,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
               ))}
             </div>
           </div>
+
           <div className={styles.addButtonContainer}>
             <button className={styles.addButton} onClick={handleAddTask}>
               추가
