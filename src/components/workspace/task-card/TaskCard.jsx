@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { GripHorizontal, Trash2 } from "lucide-react";
 import styles from "./TaskCard.module.css";
@@ -23,10 +24,14 @@ const TaskCard = ({ task, isOverlay = false, onCardClick, onDelete }) => {
     id: task?.id,
   });
 
-  const combinedRef = (node) => {
-    setDraggableRef(node);
-    setDroppableRef(node);
-  };
+  // 두 ref를 결합하여 동일한 DOM 요소에 할당 (useCallback으로 안정적으로 생성)
+  const combinedRef = useCallback(
+    (node) => {
+      setDraggableRef(node);
+      setDroppableRef(node);
+    },
+    [setDraggableRef, setDroppableRef]
+  );
 
   if (!task) return null;
 
