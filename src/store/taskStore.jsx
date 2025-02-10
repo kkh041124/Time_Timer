@@ -4,6 +4,9 @@ import { persist } from "zustand/middleware";
 const useTaskStore = create(
   persist(
     (set, get) => ({
+      color: "#b33b3f",
+      setColor: (newColor) => set(() => ({ color: newColor })),
+
       tasks: [],
       setTasks: (newTasks) => set(() => ({ tasks: newTasks })),
       activeId: null,
@@ -27,6 +30,9 @@ const useTaskStore = create(
         })),
       filter: "all",
       setFilter: (filter) => set(() => ({ filter })),
+      taskSelectModalOpen: false,
+      setTaskSelectModalOpen: (isOpen) =>
+        set(() => ({ taskSelectModalOpen: isOpen })),
     }),
     {
       name: "task-storage",

@@ -1,53 +1,60 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import { Palette } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "@radix-ui/react-tooltip";
+import useTaskStore from "../../../../store/taskStore";
 
-const ColorPicker = ({ color, updateColorChange }) => {
-  const colorInputRef = useRef(null);
+const ColorPicker = () => {
+  const { color, setColor } = useTaskStore();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleColorChange = (e) => {
-    updateColorChange(e.target.value);
+  // 팝업 열림/닫힘 토글
+  const handleToggle = () => {
+    setIsOpen((prev) => !prev);
   };
 
-  const handleClick = () => {
-    colorInputRef.current.click();
+  // 컬러 변경 시 store에 바로 업데이트
+  const handleColorChange = (e) => {
+    setColor(e.target.value);
   };
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div
-            className="text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-md p-2"
-            onClick={handleClick}
-          >
-            <Palette className="h-6 w-6" />
-          </div>
-        </TooltipTrigger>
-        <TooltipContent
-          side="right"
-          align="center"
-          sideOffset={8}
-          className="bg-white text-black rounded-md p-2 shadow-lg"
+    <div className="relative inline-block">
+      {/* 팔레트 아이콘 버튼 */}
+      <button
+        type="button"
+        onClick={handleToggle}
+        className="text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-md p-2"
+      >
+        <Palette className="h-6 w-6" />
+      </button>
+
+      {/* 팝업 (아이콘 옆에 절대 위치) */}
+      {isOpen && (
+        <div
+          className="
+            absolute 
+            top-1/2 
+            left-full 
+            ml-2 
+            -translate-y-1/2
+            bg-white 
+            text-black 
+            rounded-md 
+            shadow-lg 
+            p-2
+          "
         >
-          <p>색상 변경</p>
-        </TooltipContent>
-      </Tooltip>
-      <input
-        type="color"
-        ref={colorInputRef}
-        className="hidden"
-        value={color}
-        onChange={handleColorChange}
-      />
-    </TooltipProvider>
+          {/* 컬러 인풋 */}
+          <input
+            type="color"
+            value={color}
+            onChange={handleColorChange}
+            className="w-16 h-10 cursor-pointer"
+          />
+        </div>
+      )}
+    </div>
   );
 };
 

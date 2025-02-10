@@ -25,6 +25,20 @@
   padding-left: 40px;
   padding-bottom: 25px;
 }
+.selectBtn {
+  display: flex;
+  flex-direction: row;
+  color: white;
+  gap: 20px;
+  border: 1px solid #333a4a;
+  background-color: #1b2335;
+  width: 40%;
+  padding: 10px 20px;
+  border-radius: 15px;
+}
+.selectBtn:hover {
+  background-color: #272f40;
+}
 
 .focusBtn {
   padding: 10px 20px;

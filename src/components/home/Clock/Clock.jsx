@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./Clock.module.css";
+import useTaskStore from "../../../store/taskStore";
 
-const Clock = ({ isCheck, color }) => {
+const Clock = ({ isCheck }) => {
   const [angle, setAngle] = useState(0); // 현재 각도 상태
   const [minutes, setMinutes] = useState(0); // 분 상태
   const [click, setClick] = useState(true); // 클릭 상태
   const ClockRef = useRef(null);
   const ClickerRef = useRef(null);
-
+  const { color } = useTaskStore();
   // 이 상태는 useRef를 사용해 컴포넌트 리렌더링 시 값을 유지
   const prevColorRef = useRef(color);
 
