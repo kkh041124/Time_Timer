@@ -1,21 +1,25 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./Clock.module.css";
 import useTaskStore from "../../../store/taskStore";
+import { Button } from "@/components/ui/button";
 
 const Clock = ({ isCheck }) => {
-  const [angle, setAngle] = useState(0); // 현재 각도 상태
-  const [minutes, setMinutes] = useState(0); // 분 상태
-  const [click, setClick] = useState(true); // 클릭 상태
+  const [angle, setAngle] = useState(0);
+  const [click, setClick] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [isActive, setIsActive] = useState(false);
   const ClockRef = useRef(null);
   const ClickerRef = useRef(null);
   const { color } = useTaskStore();
-  // 이 상태는 useRef를 사용해 컴포넌트 리렌더링 시 값을 유지
   const prevColorRef = useRef(color);
 
   let centerX = 0;
   let centerY = 0;
 
   const handleMouseMove = (e) => {
+    if (!click) return;
+
     const mouseX = e.pageX;
     const mouseY = e.pageY;
 
@@ -26,13 +30,8 @@ const Clock = ({ isCheck }) => {
     setAngle((newAngle + 90) % 360);
   };
 
-  const updateTime = () => {
-    const calculatedMinutes = Math.floor((angle / 6) % 60); // 각도를 6도당 1분으로 변환
-    setMinutes(calculatedMinutes);
-  };
-
   const toggleClick = () => {
-    setClick((prev) => !prev); // 클릭 상태 토글
+    setClick((prev) => !prev);
   };
 
   useEffect(() => {
@@ -45,52 +44,76 @@ const Clock = ({ isCheck }) => {
     };
 
     updateCenter();
+    window.addEventListener("resize", updateCenter);
 
     if (ClockRef.current && !isCheck && click) {
       ClockRef.current.addEventListener("mousemove", handleMouseMove);
-      ClockRef.current.addEventListener("mousemove", updateTime);
-    } else if (ClockRef.current) {
-      ClockRef.current.removeEventListener("mousemove", handleMouseMove);
-      ClockRef.current.removeEventListener("mousemove", updateTime);
     }
-
-    window.addEventListener("resize", updateCenter);
 
     return () => {
       if (ClockRef.current) {
         ClockRef.current.removeEventListener("mousemove", handleMouseMove);
-        ClockRef.current.removeEventListener("mousemove", updateTime);
       }
       window.removeEventListener("resize", updateCenter);
     };
   }, [isCheck, click]);
 
   useEffect(() => {
-    if (!isCheck) return;
+    if (!isActive) return;
 
     const handleTick = () => {
       setAngle((prevAngle) => (prevAngle + 0.1) % 360);
+      setCurrentTime(new Date());
+      setElapsedTime((prevTime) => prevTime + 1);
     };
 
     const intervalId = setInterval(handleTick, 1000);
-
     return () => clearInterval(intervalId);
-  }, [isCheck, click]);
+  }, [isActive]);
 
-  // color 값이 변경될 때 상태를 초기화하지 않도록 설정
-  useEffect(() => {
-    if (prevColorRef.current !== color) {
-      prevColorRef.current = color;
-    }
-  }, [color]);
+  const handleStart = () => {
+    setIsActive(true);
+    setElapsedTime(0);
+  };
+
+  // 남은 시간 계산 (MM:SS)
+  let minutes = (60 - Math.floor(angle / 6)) % 60;
+  let seconds = (60 - Math.floor((angle % 6) * 10)) % 60;
+
+  // 현재 시간을 HH:MM:SS 형식으로 변환
+  const formattedCurrentTime = currentTime.toLocaleTimeString("ko-KR", {
+    hour12: false,
+  });
+
+  const formatTime = (totalSeconds) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
 
   return (
-    <div
-      className={styles.Clock}
-      ref={ClockRef}
-      onClick={toggleClick} // 클릭 시 상태 토글
-    >
-      <div className={styles.Clock_wrapper}>
+    <div className={styles.Clock_wrapper}>
+      {/* 중앙에 남은 시간 표시 */}
+      <div className={styles.timeOverlay}>
+        <div className={styles.remainingTime}>
+          {formatTime(minutes * 60 + seconds)}
+        </div>
+        <div className={styles.currentTime}>{formattedCurrentTime}</div>
+        {isActive && (
+          <div className={styles.elapsedTime}>
+            {formatTime(elapsedTime)} 경과
+          </div>
+        )}
+        <Button
+          onClick={handleStart}
+          disabled={isActive}
+          className={styles.startButton}
+        >
+          집중 시작하기
+        </Button>
+      </div>
+
+      <div className={styles.Clock} ref={ClockRef} onClick={toggleClick}>
         <div className={styles.tick_mark_wrapper}>
           <div className={styles.Clock}>
             {Array.from({ length: 60 }).map((_, i) => (

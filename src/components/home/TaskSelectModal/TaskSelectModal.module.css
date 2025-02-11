@@ -1,0 +1,118 @@
+/* components/modals/TaskSelectModal/TaskSelectModal.module.css */
+
+/* 모달 배경 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* 모달 컨테이너 */
+.TaskSelectModal {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 900px;
+  width: 100%;
+  margin: auto;
+  padding: 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  /* 추가: 최대 높이, 스크롤 */
+  max-height: 80vh; /* 뷰포트 높이의 80% */
+  overflow-y: auto;
+}
+
+/* 검색 바 */
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  padding: 8px 12px;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.searchBar:focus-within {
+  border-color: transparent;
+  box-shadow: 0 0 0 2px #a1a1aa;
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.searchBar input {
+  flex: 1;
+  outline: none;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: #111827;
+}
+.searchBar input::placeholder {
+  color: #9ca3af;
+}
+
+/* 필터 버튼 영역 */
+.filterWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f4f4f5;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.filterBtn {
+  padding: 8px 16px;
+  border-radius: 15px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.filterBtn:hover {
+  background-color: #e4e4e7;
+}
+.filterBtn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #a1a1aa;
+}
+.filterBtn:active {
+  background-color: #d4d4d8;
+}
+.filterBtnActive {
+  background-color: #fff;
+  color: #000;
+  font-weight: 600;
+  box-shadow: 0 0 0 1px #9ca3af;
+}
+/* 카드 목록: 2컬럼 그리드 */
+.taskList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  /* 필요 시 세로 스크롤
+  max-height: 500px;
+  overflow-y: auto;
+  */
+}
