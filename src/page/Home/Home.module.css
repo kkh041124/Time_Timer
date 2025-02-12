@@ -1,3 +1,4 @@
+/* 🌍 전체 레이아웃 */
 .Home {
   background-color: #111827;
   display: grid;
@@ -7,15 +8,17 @@
   gap: 20px;
 }
 
+/* 📌 중앙 메인 영역 */
 .Main {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 80px;
-  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
+/* 🎨 아이콘 영역 */
 .Icon {
   display: flex;
   flex-direction: column;
@@ -25,45 +28,24 @@
   padding-left: 40px;
   padding-bottom: 25px;
 }
+
+/* 📋 작업 선택 버튼 */
 .selectBtn {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
   color: white;
-  gap: 20px;
+  gap: 10px;
   border: 1px solid #333a4a;
   background-color: #1b2335;
   width: 40%;
-  padding: 10px 20px;
+  padding: 12px 20px;
   border-radius: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
+
 .selectBtn:hover {
   background-color: #272f40;
-}
-
-.focusBtn {
-  padding: 10px 20px;
-  font-size: 18px;
-  color: white;
-  background-color: #111827;
-  border: 2px solid #72bf78;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.focusBtn:hover {
-  background-color: #72bf78cb;
-}
-
-.focusBtnActive {
-  padding: 10px 20px;
-  font-size: 18px;
-  color: white;
-  background-color: #111827;
-  border: 2px solid #b33b3f;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.focusBtnActive:hover {
-  background-color: #b33b3fcb;
 }

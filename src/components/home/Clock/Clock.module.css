@@ -1,4 +1,4 @@
-/* 시계 전체 */
+/* 🕒 시계 전체 */
 .Clock {
   position: relative;
   width: 540px;
@@ -13,15 +13,15 @@
   justify-content: center;
 }
 
-/* 🕒 시계 중앙에 남은 시간 표시 (반투명 블러 효과) */
+/* 🔷 시계 중앙의 남은 시간 표시 */
 .timeOverlay {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.75); /* 블러 처리된 반투명 검정 */
+  background: rgba(20, 20, 20, 0.85); /* 더 부드러운 검정 */
   border-radius: 24px;
-  padding: 20px 32px;
+  padding: 24px 36px;
   text-align: center;
   color: white;
   display: flex;
@@ -29,12 +29,12 @@
   align-items: center;
   justify-content: center;
   z-index: 10;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
 }
 
 /* 남은 시간 (MM:SS) */
 .remainingTime {
-  font-size: 48px;
+  font-size: 56px; /* 가독성 향상 */
   font-weight: bold;
   letter-spacing: 1px;
 }
@@ -46,32 +46,42 @@
   opacity: 0.8;
 }
 
-/* 경과 시간 (타이머 작동 시만 보임) */
+/* 경과 시간 (타이머 작동 시 표시) */
 .elapsedTime {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
   margin-top: 4px;
 }
 
-/* 🟢 집중 시작 버튼 */
-.startButton {
+/* 🎯 집중 버튼 */
+.focusButton {
   background: transparent;
-  border: 2px solid #10b981; /* 초록색 테두리 */
+  border: 2px solid #10b981;
   color: white;
-  font-size: 14px;
-  padding: 8px 12px;
+  font-size: 16px; /* 버튼 폰트 크기 증가 */
+  padding: 10px 16px;
   border-radius: 8px;
   margin-top: 12px;
   transition: background 0.3s ease, border 0.3s ease;
   cursor: pointer;
 }
 
-.startButton:hover {
+.focusButton:hover {
   background: rgba(255, 255, 255, 0.15);
-  border-color: #34d399; /* 더 밝은 초록 */
+  border-color: #34d399;
 }
 
-/* 시계 눈금 표시 */
+/* 🔄 집중 중 버튼 (멈출 수 있도록) */
+.focusButtonActive {
+  border-color: #e53e3e; /* 더 강한 붉은색 */
+}
+
+.focusButtonActive:hover {
+  background: rgba(255, 0, 0, 0.15);
+  border-color: #ff6b6b;
+}
+
+/* ⏳ 시계 눈금 */
 .tick_mark {
   position: absolute;
   top: 0;
@@ -80,7 +90,7 @@
   transform-origin: 0 270px;
 }
 
-/* 눈금 숫자 */
+/* 숫자 */
 .tick_number {
   position: absolute;
   color: white;
@@ -94,7 +104,7 @@
   transform: translate(-50%, -50%);
 }
 
-/* 시계 내부 진행 바 */
+/* 진행 바 */
 .timer_slider_wrapper {
   color: white;
 }
@@ -109,13 +119,13 @@
   transform: translate(-50%, -50%);
 }
 
-/* 중앙 회색 클릭 핸들 */
+/* 🔘 클릭 핸들 */
 .Clicker {
   position: absolute;
   width: 80px;
   height: 80px;
   border-radius: 100%;
-  background-color: #d9d9d9;
+  background-color: #e2e8f0; /* 더 밝은 회색 */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -125,7 +135,7 @@
   position: absolute;
   width: 250px;
   height: 8px;
-  background-color: #d9d9d9;
+  background-color: #e2e8f0;
   top: 50%;
   left: 50%;
   transform-origin: 0 50%;

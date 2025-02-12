@@ -3,22 +3,23 @@ import styles from "./Clock.module.css";
 import useTaskStore from "../../../store/taskStore";
 import { Button } from "@/components/ui/button";
 
-const Clock = ({ isCheck }) => {
+const Clock = () => {
   const [angle, setAngle] = useState(0);
   const [click, setClick] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false); // 🛠 한 번 시작했는지 여부
+  const elapsedTimeRef = useRef(0); // 🛠 경과 시간 유지
   const ClockRef = useRef(null);
   const ClickerRef = useRef(null);
   const { color } = useTaskStore();
-  const prevColorRef = useRef(color);
 
   let centerX = 0;
   let centerY = 0;
 
   const handleMouseMove = (e) => {
-    if (!click) return;
+    if (!click || isActive || hasStarted) return; // 🛠 한 번 시작 후 회전 불가
 
     const mouseX = e.pageX;
     const mouseY = e.pageY;
@@ -31,7 +32,7 @@ const Clock = ({ isCheck }) => {
   };
 
   const toggleClick = () => {
-    setClick((prev) => !prev);
+    if (!isActive && !hasStarted) setClick((prev) => !prev);
   };
 
   useEffect(() => {
@@ -46,7 +47,7 @@ const Clock = ({ isCheck }) => {
     updateCenter();
     window.addEventListener("resize", updateCenter);
 
-    if (ClockRef.current && !isCheck && click) {
+    if (ClockRef.current && !isActive && click && !hasStarted) {
       ClockRef.current.addEventListener("mousemove", handleMouseMove);
     }
 
@@ -56,35 +57,53 @@ const Clock = ({ isCheck }) => {
       }
       window.removeEventListener("resize", updateCenter);
     };
-  }, [isCheck, click]);
+  }, [click, isActive, hasStarted]);
 
   useEffect(() => {
     if (!isActive) return;
 
     const handleTick = () => {
       setAngle((prevAngle) => (prevAngle + 0.1) % 360);
-      setCurrentTime(new Date());
       setElapsedTime((prevTime) => prevTime + 1);
+      elapsedTimeRef.current += 1; // 🛠 경과 시간 유지
     };
 
     const intervalId = setInterval(handleTick, 1000);
     return () => clearInterval(intervalId);
   }, [isActive]);
 
+  // 🛠 현재 시간을 초 단위로 업데이트
+  useEffect(() => {
+    const updateTime = () => {
+      setCurrentTime(new Date());
+    };
+
+    const timeInterval = setInterval(updateTime, 1000);
+    return () => clearInterval(timeInterval);
+  }, []);
+
   const handleStart = () => {
-    setIsActive(true);
-    setElapsedTime(0);
+    setIsActive((prev) => !prev);
+
+    if (!isActive) {
+      setHasStarted(true); // 🛠 한 번 시작하면 다시 회전 불가
+    }
+
+    if (!isActive) {
+      setElapsedTime(elapsedTimeRef.current); // 🛠 중단 후 다시 시작 시 경과 시간 유지
+    }
   };
 
-  // 남은 시간 계산 (MM:SS)
-  let minutes = (60 - Math.floor(angle / 6)) % 60;
-  let seconds = (60 - Math.floor((angle % 6) * 10)) % 60;
+  // 🛠 0에서 시작하도록 `Math.ceil(angle / 6)`로 수정
+  let minutes = (60 - Math.ceil(angle / 6)) % 60;
+  let seconds = (60 - Math.ceil((angle % 6) * 10)) % 60;
 
-  // 현재 시간을 HH:MM:SS 형식으로 변환
+  // 현재 시간 표시 (HH:MM:SS)
   const formattedCurrentTime = currentTime.toLocaleTimeString("ko-KR", {
     hour12: false,
   });
 
+  // 시간 포맷 함수
   const formatTime = (totalSeconds) => {
     const mins = Math.floor(totalSeconds / 60);
     const secs = totalSeconds % 60;
@@ -93,23 +112,22 @@ const Clock = ({ isCheck }) => {
 
   return (
     <div className={styles.Clock_wrapper}>
-      {/* 중앙에 남은 시간 표시 */}
+      {/* 중앙 남은 시간 표시 */}
       <div className={styles.timeOverlay}>
         <div className={styles.remainingTime}>
           {formatTime(minutes * 60 + seconds)}
         </div>
         <div className={styles.currentTime}>{formattedCurrentTime}</div>
-        {isActive && (
-          <div className={styles.elapsedTime}>
-            {formatTime(elapsedTime)} 경과
-          </div>
-        )}
+        <div className={styles.elapsedTime}>
+          {formatTime(elapsedTimeRef.current)} 경과
+        </div>
         <Button
           onClick={handleStart}
-          disabled={isActive}
-          className={styles.startButton}
+          className={`${styles.focusButton} ${
+            isActive ? styles.focusButtonActive : ""
+          }`}
         >
-          집중 시작하기
+          {isActive ? "멈추기" : "집중 시작하기"}
         </Button>
       </div>
 
