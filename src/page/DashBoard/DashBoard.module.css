@@ -1,0 +1,379 @@
+:root {
+  --bg-color: #f9fafb;
+  --card-bg: #ffffff;
+  --text-color: #111827;
+  --secondary-text: #6b7280;
+  --accent-color: #4f46e5;
+  --border-color: #e5e7eb;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --transition-speed: 0.3s;
+}
+
+/* 전체 컨테이너 (전체 폭 사용) */
+.container {
+  background: var(--bg-color);
+  color: var(--text-color);
+  width: 100%;
+  padding: 1.5rem;
+  transition: background var(--transition-speed), color var(--transition-speed);
+}
+
+/* 네비게이션 */
+.topNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--card-bg);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+.navIcon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.navText {
+  font-size: 1rem;
+  margin-left: 0.3rem;
+}
+
+/* 헤더 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+}
+
+/* 메인 컨텐츠 */
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* 섹션 공통 스타일 */
+section {
+  margin-bottom: 2rem;
+}
+
+/* 목표 달성 진행률 섹션 */
+.progressSection {
+  margin-bottom: 2rem;
+}
+
+.progressCard {
+  background-color: var(--card-bg);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px var(--shadow);
+}
+
+.progressTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 1rem;
+}
+
+.progressBar {
+  width: 100%;
+  height: 1rem;
+  background-color: var(--border-color);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: var(--accent-color);
+  transition: width var(--transition-speed);
+}
+
+.progressText {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}
+
+/* KPI 섹션 */
+.kpiSection {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+}
+
+.kpiCard {
+  background: linear-gradient(135deg, #ffffff, #f3f4f6);
+  border-left: 3px solid var(--accent-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  padding: 0.3rem;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.kpiItem {
+  display: flex;
+  align-items: center;
+  padding: 0.3rem;
+}
+
+.kpiIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent-color);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-right: 0.3rem;
+}
+
+.kpiInfo {
+  flex: 1;
+}
+
+.kpiLabel {
+  font-size: 0.75rem;
+  color: var(--secondary-text);
+  margin-bottom: 0.1rem;
+}
+
+.kpiValue {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* 차트 섹션 */
+.chartSection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-around;
+}
+
+.chartCard {
+  background: linear-gradient(135deg, #ffffff, #f9fafb);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 8px var(--shadow);
+  width: calc(50% - 1rem);
+  min-width: 300px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chartCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px var(--shadow);
+}
+
+.chartTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chartContainer {
+  height: 18rem;
+  padding: 1.5rem;
+}
+
+/* 히트맵 스타일 */
+.heatmapGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+}
+
+.heatmapCell {
+  padding: 0.5rem;
+  text-align: center;
+  border-radius: 0.25rem;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* 도넛 차트 감싸기 */
+.doughnutWrapper {
+  position: relative;
+  width: 12rem;
+  height: 12rem;
+  margin: 0 auto;
+}
+
+/* 캘린더 섹션 */
+.calendarSection {
+  margin-bottom: 2rem;
+}
+.calendarCard {
+  background-color: var(--card-bg);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px var(--shadow);
+}
+.calendarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+.calendarTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.calendarNav {
+  display: flex;
+  gap: 0.5rem;
+}
+.navArrow {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+  padding: 1rem;
+}
+.dayCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.dayCell:hover {
+  transform: scale(1.05);
+}
+.dayLabel {
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+.progressCircle {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.progressLabel {
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+/* 작업 섹션 */
+.taskSection {
+  margin-bottom: 2rem;
+}
+.taskHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.filterBar {
+  display: flex;
+  gap: 0.75rem;
+}
+.searchBar {
+  margin-top: 0.5rem;
+}
+.searchBar input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+}
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.taskCard {
+  background-color: var(--card-bg);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.taskCard:hover {
+  background-color: var(--border-color);
+  box-shadow: 0 6px 8px var(--shadow);
+}
+.taskItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+.taskTitle {
+  font-size: 1rem;
+}
+
+/* 모달 스타일 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modalContent {
+  background-color: var(--card-bg);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  max-width: 90%;
+  box-shadow: 0 6px 8px var(--shadow);
+  transition: transform 0.3s ease;
+}
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.modalBody {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+.modalBody input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+.modalText {
+  margin-bottom: 0.5rem;
+}

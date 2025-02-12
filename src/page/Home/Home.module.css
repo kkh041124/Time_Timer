@@ -49,3 +49,20 @@
 .selectBtn:hover {
   background-color: #272f40;
 }
+
+/* 📋 선택된 작업 카드 (selectedTaskWrapper) 스타일 */
+/* 작업이 선택되었을 때 버튼 대신 작업 카드 형태로 보여지며, 클릭 시 작업 변경 모달을 다시 열 수 있음 */
+.selectedTaskWrapper {
+  width: 40%;
+  border: 1px solid #333a4a;
+  border-radius: 15px;
+  background-color: #1b2335;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selectedTaskWrapper:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}

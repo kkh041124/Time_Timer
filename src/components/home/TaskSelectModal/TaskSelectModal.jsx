@@ -18,7 +18,13 @@ function getDayDiff(date1, date2) {
 }
 
 const TaskSelectModal = () => {
-  const { taskSelectModalOpen, setTaskSelectModalOpen, tasks } = useTaskStore();
+  // selectedTaskId 관련 함수를 추가합니다.
+  const {
+    taskSelectModalOpen,
+    setTaskSelectModalOpen,
+    tasks,
+    setSelectedTaskId,
+  } = useTaskStore();
 
   // 검색어 / 필터 상태
   const [searchText, setSearchText] = useState("");
@@ -137,8 +143,9 @@ const TaskSelectModal = () => {
               key={task.id}
               task={task}
               onClick={(clickedId) => {
-                console.log("모달 카드 클릭:", clickedId);
-                // 필요 시 모달 닫기 등 추가 로직
+                // 작업 선택 시 Zustand 상태 업데이트 및 모달 닫기
+                setSelectedTaskId(clickedId);
+                setTaskSelectModalOpen(false);
               }}
             />
           ))}
