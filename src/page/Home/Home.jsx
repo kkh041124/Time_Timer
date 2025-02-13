@@ -13,6 +13,7 @@ const Home = () => {
     setColor,
     tasks,
     selectedTaskId,
+    setSelectedTaskId, // 작업 선택 해제를 위한 함수
     taskSelectModalOpen,
     setTaskSelectModalOpen,
   } = useTaskStore();
@@ -22,17 +23,22 @@ const Home = () => {
     setColor(newColor);
   };
 
-  // 모달 열기
+  // 작업 선택 모달 열기
   const handleSelectTask = () => {
     setTaskSelectModalOpen(true);
   };
 
-  // 모달 닫기
+  // 작업 선택 모달 닫기
   const handleCloseModal = () => {
     setTaskSelectModalOpen(false);
   };
 
-  // tasks 배열에서 selectedTaskId에 해당하는 작업 정보를 가져옴
+  // 작업 취소 (선택 해제 → '작업 선택하기' 버튼 보이게 함)
+  const handleCancelTask = () => {
+    setSelectedTaskId(null);
+  };
+
+  // 선택된 작업 찾기
   const selectedTask = tasks.find((task) => task.id === selectedTaskId);
 
   return (
@@ -45,9 +51,12 @@ const Home = () => {
         />
       </div>
       <div className={styles.Main}>
-        {/* 선택된 작업이 있으면 새로운 UI(SelectedTaskDisplay)로 표시하고, 없으면 '작업 선택하기' 버튼을 표시 */}
+        {/* 작업이 선택된 경우: 작업 카드 표시 / 선택된 작업이 없으면 버튼 표시 */}
         {selectedTask ? (
-          <SelectedTaskDisplay task={selectedTask} onClick={handleSelectTask} />
+          <SelectedTaskDisplay
+            task={selectedTask}
+            onCancel={handleCancelTask}
+          />
         ) : (
           <button className={styles.selectBtn} onClick={handleSelectTask}>
             <Plus /> 작업 선택하기

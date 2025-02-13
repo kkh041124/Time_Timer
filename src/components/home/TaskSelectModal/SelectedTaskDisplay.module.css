@@ -1,39 +1,128 @@
-.selectedTaskContainer {
+.card {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
   width: 40%;
-  background-color: #1b2335;
-  border: 1px solid #333a4a;
-  border-radius: 15px;
-  padding: 20px;
-  color: #ffffff;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #1e293b;
+  border: 1px solid #374151;
+  border-radius: 10px;
+  padding: 16px 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease-in-out, background-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-.selectedTaskContainer:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+/* 🎨 카드 hover 효과: 배경 밝기 증가 + 그림자 강조 */
+.card:hover {
+  transform: translateX(-50%) translateY(-2px);
+  background-color: #25354b; /* hover 시 더 밝아짐 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .taskHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
 }
 
 .taskTitle {
-  font-size: 1.5rem;
-  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f9fafb;
 }
 
-.changeTaskBtn {
-  background: none;
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+}
+
+/* 🎯 변경 버튼 hover: 배경 색상 변경 + 테두리 추가 */
+.editButton {
+  background: #2a394f;
+  color: #7ea9da;
   border: none;
-  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.3s ease, border 0.3s ease;
 }
 
-.taskDetails p {
-  margin: 8px 0;
+.editButton:hover {
+  background: #365478; /* hover 시 더 밝아짐 */
+  border: 1px solid #93c5fd; /* 테두리 추가 */
+}
+
+/* 🗑️ 삭제 버튼 hover: 배경 색상 변경 + 테두리 추가 */
+.deleteButton {
+  background: #353646;
+  color: #f4a0a1;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
   font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.3s ease, border 0.3s ease;
+}
+
+.deleteButton:hover {
+  background: #553a46; /* hover 시 더 밝아짐 */
+  border: 1px solid #fca5a5; /* 테두리 추가 */
+}
+
+.taskDetails {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  color: #e5e7eb;
+}
+
+.stars {
+  display: flex;
+  gap: 4px;
+}
+
+.star {
+  font-size: 1.2rem;
+}
+
+.dot {
+  color: #9ca3af;
+  font-size: 1rem;
+}
+
+.dueDate {
+  color: #e5e7eb;
+}
+
+/* 대기중 (todo) : 연한 회색 배경 + 짙은 회색 텍스트 */
+.statusTodo {
+  background-color: #6b7280;
+  color: #f3f4f6;
+}
+
+/* 진행중 (inProgress) : 연한 파랑 배경 + 파랑 텍스트 */
+.statusInProgress {
+  background-color: #dbeafe;
+  color: #3b82f6;
+}
+
+/* 완료 (done) : 연한 초록 배경 + 초록 텍스트 */
+.statusDone {
+  background-color: #d1fae5;
+  color: #10b981;
+}
+/* 공통 상태 스타일 */
+.statusTag {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
 }

@@ -1,50 +1,83 @@
 import React from "react";
 import styles from "./SelectedTaskDisplay.module.css";
-import { Edit } from "lucide-react";
+import useTaskStore from "../../../store/taskStore";
 
-/**
- * 선택된 작업을 보여주는 UI 컴포넌트
- * @param {Object} props
- * @param {Object} props.task - { id, title, dueDate, priority, progress, status }
- * @param {Function} props.onClick - 작업 변경을 위해 클릭 시 호출되는 함수
- */
-const SelectedTaskDisplay = ({ task, onClick }) => {
+function renderStars(priority = 0) {
+  return Array.from({ length: 5 }, (_, i) => (
+    <span
+      key={i}
+      className={styles.star}
+      style={{ color: i < priority ? "#FFD700" : "#4B5563" }} // ⭐ 노란색 / 회색 적용
+    >
+      ★
+    </span>
+  ));
+}
+
+const SelectedTaskDisplay = () => {
+  const { tasks, selectedTaskId, setSelectedTaskId, setTaskSelectModalOpen } =
+    useTaskStore();
+
+  const task = tasks.find((t) => t.id === selectedTaskId);
   if (!task) return null;
 
-  // 마감일 포맷 (한국어)
+  const starElements = renderStars(task.priority || 0); // 기본값 0
   const formattedDueDate = task.dueDate
     ? new Date(task.dueDate).toLocaleDateString("ko-KR", {
         year: "numeric",
-        month: "numeric",
+        month: "long",
         day: "numeric",
       })
-    : "날짜 미정";
+    : "날짜 없음";
+
+  const handleCancel = () => {
+    setSelectedTaskId(null); // 작업 선택 해제 (삭제 X)
+  };
+
+  const handleEdit = () => {
+    setTaskSelectModalOpen(true); // 수정 모달 열기
+  };
+
+  // ✅ 상태별 스타일 매핑
+  const statusMap = {
+    todo: {
+      text: "대기중",
+      className: styles.statusTodo,
+    },
+    inProgress: {
+      text: "진행중",
+      className: styles.statusInProgress,
+    },
+    done: {
+      text: "완료",
+      className: styles.statusDone,
+    },
+  };
+
+  // ✅ `task.status`가 존재하지 않을 경우 기본값 "대기중" 처리
+  const taskStatus = statusMap[task.status] ?? statusMap["todo"];
 
   return (
-    <div
-      className={styles.selectedTaskContainer}
-      onClick={onClick}
-      title="작업 변경"
-    >
+    <div className={styles.card}>
       <div className={styles.taskHeader}>
-        <h2 className={styles.taskTitle}>{task.title}</h2>
-        <button className={styles.changeTaskBtn} aria-label="작업 변경">
-          <Edit />
-        </button>
+        <h3 className={styles.taskTitle}>{task.title}</h3>
+        <div className={styles.buttonGroup}>
+          <button className={styles.editButton} onClick={handleEdit}>
+            변경
+          </button>
+          <button className={styles.deleteButton} onClick={handleCancel}>
+            취소
+          </button>
+        </div>
       </div>
       <div className={styles.taskDetails}>
-        <p>
-          <strong>마감일:</strong> {formattedDueDate}
-        </p>
-        <p>
-          <strong>우선순위:</strong> {task.priority}
-        </p>
-        <p>
-          <strong>진행도:</strong> {task.progress}
-        </p>
-        <p>
-          <strong>상태:</strong> {task.status}
-        </p>
+        <div className={styles.stars}>{starElements}</div>
+        <span className={styles.dot}>•</span>
+        <span className={styles.dueDate}>📅 {formattedDueDate}</span>
+        <span className={styles.dot}>•</span>
+        <span className={`${styles.statusTag} ${taskStatus.className}`}>
+          {taskStatus.text}
+        </span>
       </div>
     </div>
   );
